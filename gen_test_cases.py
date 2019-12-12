@@ -1,0 +1,45 @@
+import random
+import numpy
+import sys
+
+if len(sys.argv) == 4 :
+    # Variable values if 3 arguments are provided
+    NUM_CASES = int(sys.argv[1])
+    MIN_NUM_PRODUCTS = int(sys.argv[2])
+    MAX_NUM_PRODUCTS = int(sys.argv[3])
+else:
+    # Default values
+    NUM_CASES = 1
+    MIN_NUM_PRODUCTS = 5
+    MAX_NUM_PRODUCTS = 20
+
+for i in range(NUM_CASES):
+    # Random number of products
+    num_products = random.randint(MIN_NUM_PRODUCTS, MAX_NUM_PRODUCTS)
+    # Initialize matrix with ones
+    t = numpy.ones((num_products, num_products))
+    col_init = 0
+    # Iterate rows
+    for row in range(num_products):
+        # Iterate cols (upper triangle matrix)
+        col_init = col_init + 1
+        for col in range(col_init, num_products):
+            # Fill both symmetric components in matrix with random 1 or 0
+            t[row][col] = t[col][row] = random.randint(0, 1)
+    # Open file
+    fw = open("testSet_" + str(i + 1),"w+")
+    # Open number of products
+    fw.write(str(num_products)+ "\n")
+    # Write matrix to file
+    for row in range(num_products):
+        for col in range(num_products):
+            # Different columns separated by single space
+            fw.write(str(int(t[row][col]))+ " ")
+        # Different rows separated by new line
+        fw.write("\n")
+    # Close file
+    fw.close()
+
+
+
+
