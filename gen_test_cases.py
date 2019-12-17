@@ -1,3 +1,8 @@
+# Authors:
+# Peñasco Estívalez, Víctor Miguel  741294
+# Rodríguez Esteban, Rubén          737215
+
+# Import libraries
 import random
 import numpy
 import sys
@@ -10,9 +15,10 @@ if len(sys.argv) == 4 :
 else:
     # Default values
     NUM_CASES = 1
-    MIN_NUM_PRODUCTS = 5
-    MAX_NUM_PRODUCTS = 20
+    MIN_NUM_PRODUCTS = 50
+    MAX_NUM_PRODUCTS = 85
 
+# Test cases with random values
 for i in range(NUM_CASES):
     # Random number of products
     num_products = random.randint(MIN_NUM_PRODUCTS, MAX_NUM_PRODUCTS)
@@ -44,6 +50,44 @@ for i in range(NUM_CASES):
         fw.write("\n")
     # Close file
     fw.close()
+
+# Particular case with random dimension matrix filled with ones
+# Random number of products
+num_products = random.randint(MIN_NUM_PRODUCTS, MAX_NUM_PRODUCTS)
+# Initialize matrix with ones
+t = numpy.ones((num_products, num_products))
+# Open file
+fw = open("testSet_ones","w+")
+# Open number of products
+fw.write(str(num_products)+ "\n")
+# Write matrix to file
+for row in range(num_products):
+    for col in range(num_products):
+        # Different columns separated by single space
+        fw.write(str(int(t[row][col]))+ " ")
+    # Different rows separated by new line
+    fw.write("\n")
+# Close file
+fw.close()
+
+# Particular case with random dimension matrix filled with zeros (eye matrix)
+# Random number of products
+num_products = random.randint(MIN_NUM_PRODUCTS, MAX_NUM_PRODUCTS)
+# Initialize matrix with ones
+t = numpy.eye(num_products)
+# Open file
+fw = open("testSet_eye","w+")
+# Open number of products
+fw.write(str(num_products)+ "\n")
+# Write matrix to file
+for row in range(num_products):
+    for col in range(num_products):
+        # Different columns separated by single space
+        fw.write(str(int(t[row][col]))+ " ")
+    # Different rows separated by new line
+    fw.write("\n")
+# Close file
+fw.close()
 
 
 
