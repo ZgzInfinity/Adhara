@@ -14,17 +14,17 @@ public class Mincut {
 	
 	private static int MIN_NUMBER_VERTEX = 2;
 	
-	public static void main(int argc, String[] args) {
+	public static void main(String[] args) {
 		
-		if (argc != 2 && argc != 3) {
+		if (args.length != 1 && args.length != 2) {
 			System.err.println("Wrong number of parameters");
 			System.err.println("Invoke like mincut <matrixFile> <productsFile>");
 			System.exit(1);
 		}
-		if (argc == 3) {
+		if (args.length == 2) {
 			
 		}
-		File file = new File(args[1]);
+		File file = new File(args[0]);
 	    Scanner input;
 		try {
 			input = new Scanner(file);
@@ -137,11 +137,11 @@ public class Mincut {
 				}
 			}
 			for(Entry<String, Node> entry : graph.entrySet()) {
-				List<Product> productsList = entry.getValue().getProductsList();
+//				List<Product> productsList = entry.getValue().getProductsList();
 				System.out.println(entry.getKey());
-				for (Product product : productsList) {
-					System.out.println(product.getId());
-				}
+//				for (Product product : productsList) {
+//					System.out.println(product.getId());
+//				}
 			}
 		} 
 		catch (FileNotFoundException e) {
