@@ -1,6 +1,22 @@
+/**
+ ********************************************
+ **** Algorithm for difficult problems ******
+ **** Practice 1: Minimum cut problem *******
+ **** Authors: ******************************
+ **** Victor Peñasco Estivalez - 741294 *****
+ **** Ruben Rodriguez Esteban - 737215 ******
+ **** Date: 29 - 12 - 2019 ******************
+ ********************************************
+ */
+
+
 package Mincut;
+
+
 import java.util.Hashtable;
 import java.util.List;
+
+
 
 public class Node {
 	
@@ -12,6 +28,12 @@ public class Node {
 	Hashtable<String, Edge> adjNodes;
 	
 	
+	
+	/**
+	 * @param id
+	 * @param productsList
+	 * @param adjNodes
+	 */
 	public Node(String id, List<Product> productsList, Hashtable<String, Edge> adjNodes) {
 		this.id = id;
 		this.productsList = productsList;
@@ -19,6 +41,7 @@ public class Node {
 	}
 
 
+	
 	/**
 	 * @return the id
 	 */
@@ -27,6 +50,7 @@ public class Node {
 	}
 
 
+	
 	/**
 	 * @param id the id to set
 	 */
@@ -35,6 +59,7 @@ public class Node {
 	}
 
 
+	
 	/**
 	 * @return the productsList
 	 */
@@ -43,6 +68,7 @@ public class Node {
 	}
 
 
+	
 	/**
 	 * @param productsList the productsList to set
 	 */
@@ -51,6 +77,7 @@ public class Node {
 	}
 
 
+	
 	/**
 	 * @return the adjNodes
 	 */
@@ -59,6 +86,7 @@ public class Node {
 	}
 
 
+	
 	/**
 	 * @param adjNodes the adjNodes to set
 	 */

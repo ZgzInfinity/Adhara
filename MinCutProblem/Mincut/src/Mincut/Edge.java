@@ -1,10 +1,25 @@
+/**
+ ********************************************
+ **** Algorithm for difficult problems ******
+ **** Practice 1: Minimum cut problem *******
+ **** Authors: ******************************
+ **** Victor Peñasco Estivalez - 741294 *****
+ **** Ruben Rodriguez Esteban - 737215 ******
+ **** Date: 29 - 12 - 2019 ******************
+ ********************************************
+ */
+
 package Mincut;
 
 public class Edge {
 	
+	// Number of conections
 	int degree;
-	
+
+	// Destinatip vertex with the edge is connected
 	Node vertex;
+	
+	
 	
 	/**
 	 * @param degree
@@ -15,6 +30,8 @@ public class Edge {
 		this.vertex = vertex;
 	}
 
+	
+	
 	/**
 	 * @return the degree
 	 */
@@ -22,6 +39,8 @@ public class Edge {
 		return degree;
 	}
 
+	
+	
 	/**
 	 * @param degree the degree to set
 	 */
@@ -29,6 +48,8 @@ public class Edge {
 		this.degree = degree;
 	}
 
+	
+	
 	/**
 	 * @return the vertex
 	 */
@@ -36,13 +57,13 @@ public class Edge {
 		return vertex;
 	}
 
+	
+	
 	/**
 	 * @param vertex the vertex to set
 	 */
 	public void setVertex(Node vertex) {
 		this.vertex = vertex;
 	}
-	
-	
 	
 }
