@@ -3,7 +3,7 @@
  **** Algorithm for difficult problems ******
  **** Practice 1: Minimum cut problem *******
  **** Authors: ******************************
- **** Victor Peñasco Estivalez - 741294 *****
+ **** Victor Peï¿½asco Estivalez - 741294 *****
  **** Ruben Rodriguez Esteban - 737215 ******
  **** Date: 29 - 12 - 2019 ******************
  ********************************************
@@ -22,8 +22,8 @@ public class Node {
 	
 	// Vertex identifier
 	String id;
-	// List of products
-	List<Product> productsList;
+	// Hash table of products
+	Hashtable<String, Product> products;
 	// Hash table which contains the adjacent nodes
 	Hashtable<String, Edge> adjNodes;
 	
@@ -31,12 +31,12 @@ public class Node {
 	
 	/**
 	 * @param id
-	 * @param productsList
+	 * @param products
 	 * @param adjNodes
 	 */
-	public Node(String id, List<Product> productsList, Hashtable<String, Edge> adjNodes) {
+	public Node(String id, Hashtable<String, Product> products, Hashtable<String, Edge> adjNodes) {
 		this.id = id;
-		this.productsList = productsList;
+		this.products = products;
 		this.adjNodes = adjNodes;
 	}
 
@@ -61,19 +61,19 @@ public class Node {
 
 	
 	/**
-	 * @return the productsList
+	 * @return the products
 	 */
-	public List<Product> getProductsList() {
-		return productsList;
+	public Hashtable<String, Product> getProducts() {
+		return products;
 	}
 
 
 	
 	/**
-	 * @param productsList the productsList to set
+	 * @param products the products to set
 	 */
-	public void setProductsList(List<Product> productsList) {
-		this.productsList = productsList;
+	public void setProducts(Hashtable<String, Product> products) {
+		this.products = products;
 	}
 
 
