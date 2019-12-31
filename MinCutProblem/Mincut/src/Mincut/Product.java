@@ -3,7 +3,7 @@
  **** Algorithm for difficult problems ******
  **** Practice 1: Minimum cut problem *******
  **** Authors: ******************************
- **** Victor Peñasco Estivalez - 741294 *****
+ **** Victor Peï¿½asco Estivalez - 741294 *****
  **** Ruben Rodriguez Esteban - 737215 ******
  **** Date: 29 - 12 - 2019 ******************
  ********************************************
@@ -12,19 +12,15 @@
 
 package Mincut;
 
+import java.util.List;
+
 public class Product {
 
 	// Identifier of the product
 	private String id;
 	
-	// Name of the product
-	private String name;
-	
-	// Number of unities of the product
-	private int units;
-	
-	// Price of the product per unity
-	private int price;
+	// List of attributes
+	private List<String> attributes;
 	
 	
 	
@@ -34,23 +30,19 @@ public class Product {
 	public Product(String id) {
 		this.id = id;
 	}
-	
+
 	
 	
 	/**
 	 * @param id
-	 * @param name
-	 * @param units
-	 * @param price
+	 * @param attributes
 	 */
-	public Product(String id, String name, int units, int price) {
+	public Product(String id, List<String> attributes) {
 		this.id = id;
-		this.name = name;
-		this.units = units;
-		this.price = price;
+		this.attributes = attributes;
 	}
 
-
+	
 	
 	/**
 	 * @return the id
@@ -59,7 +51,7 @@ public class Product {
 		return id;
 	}
 
-
+	
 	
 	/**
 	 * @param id the id to set
@@ -68,58 +60,23 @@ public class Product {
 		this.id = id;
 	}
 
-
+	
 	
 	/**
-	 * @return the name
+	 * @return the attributes
 	 */
-	public String getName() {
-		return name;
+	public List<String> getAttributes() {
+		return attributes;
 	}
-
 
 	
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
 	
 	/**
-	 * @return the units
+	 * @param attributes the attributes to set
 	 */
-	public int getUnits() {
-		return units;
+	public void setAttributes(List<String> attributes) {
+		this.attributes = attributes;
 	}
-
-
 	
-	/**
-	 * @param units the units to set
-	 */
-	public void setUnits(int units) {
-		this.units = units;
-	}
-
-
-	
-	/**
-	 * @return the price
-	 */
-	public int getPrice() {
-		return price;
-	}
-
-
-	
-	/**
-	 * @param price the price to set
-	 */
-	public void setPrice(int price) {
-		this.price = price;
-	}
 	
 }

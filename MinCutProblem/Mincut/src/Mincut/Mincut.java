@@ -12,8 +12,11 @@
 
 package Mincut;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -28,7 +31,7 @@ public class Mincut {
 	// Minimun number of vertices to execute the karger algorithm
 	private static int MIN_NUMBER_VERTEX = 2;
 	// Number of iterations for this algorithm
-	private static int ATTEMPTS = 10;
+	private static int ATTEMPTS = 20;
 	
 	
 	/**
@@ -38,23 +41,55 @@ public class Mincut {
 	 * 		   and whose edges are the pairs of products that have ever been bought together.
 	 */
 	@SuppressWarnings("resource")
-	public static  Hashtable <String, Node> readProducts(File productsFile) {
+	public static  Hashtable <String, Node> readProducts(File productsFile, String attributesFilePath) {
 		// Stores the graph where the vertices are the products
 		// and the edges are the products that have been bought together
 		Hashtable <String, Node> graph = new Hashtable<>();	
 		
 		// Open the file that contains the matrix the products 
 		Scanner input;
+		
+		
 		try {
 			input = new Scanner(productsFile);
+			BufferedReader br = null;
+			if(attributesFilePath != null) {
+				try {
+					// Open the file that contains the products' attributes
+					br = new BufferedReader(new FileReader(attributesFilePath));
+				}
+				catch(IOException e) {
+					br = null;
+				}
+			}
+			
+			
 			
 			// Stores the number of products (first line of the file
 			int numProducts = Integer.parseInt(input.next());
 
 			// For each product do
 			for (Integer i = 0; i < numProducts; i++) {
-				// Create a new product with a new key
-				Product p = new Product(i.toString());
+				// Try to get product's attribute
+				List<String> attributes = new ArrayList<>();
+				if(br != null) {
+					String line = br.readLine();
+					// Replace possible whitespace with tabs
+					line = line.replaceAll(" ", "\t");
+					line = line.replaceAll("\t+", "\t");
+					// Store attributes as list of strings
+					attributes = Arrays.asList(line.split("\t"));
+				}
+				
+				Product p;
+				if(attributes.isEmpty()) {
+					// Create a new product with a new key
+					p = new Product(i.toString());
+				}
+				else {
+					// Create a new product with a new key and product attributes
+					p = new Product(i.toString(), attributes);
+				}
 				
 				// Hash table to store products that have ever been purchased with the product <<i>>
 				Hashtable<String, Product> products = new Hashtable<>();
@@ -93,7 +128,7 @@ public class Mincut {
 			}
 			return graph;	
 		} 
-		catch (FileNotFoundException e) {
+		catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}		
@@ -285,14 +320,15 @@ public class Mincut {
 			System.err.println("Invoke like mincut <matrixFile> <productsFile>");
 			System.exit(1);
 		}
+		String attributesFilePath = null;
 		if (args.length == 2) {
-			
+			attributesFilePath = args[1];	
 		}
 		// Get the file which contains the products matrix
 		File file = new File(args[0]);	
 		
 		// Store init graph for cut value checking
-		Hashtable <String, Node> initGraph = readProducts(file);
+		Hashtable <String, Node> initGraph = readProducts(file, attributesFilePath);
 		
 		int minimumCut = Integer.MAX_VALUE;
 		
@@ -305,7 +341,7 @@ public class Mincut {
 			// Stores the graph where the vertices are the products
 			// and the edges are the products that have been bought together		
 			// Read the products from the file and store them in the graph
-			Hashtable <String, Node> graph = readProducts(file);
+			Hashtable <String, Node> graph = readProducts(file, attributesFilePath);
 			
 			// Execution of the karger algorithm to resolve the mincut problem
 			karger(graph);
@@ -325,19 +361,29 @@ public class Mincut {
 		// Print final results
 		System.out.println();
 		System.out.println("Execution finished");
-		System.out.println("Best cut value: " + minimumCut);
+		System.out.println("Minimum cut value: " + minimumCut + "\n");
 		
 		// Print first set of products
 		System.out.println("First set of products");
 		for(Entry<String, Product> entry : firstProductSet.entrySet()) {
-			System.out.print(entry.getKey() + " ");
+			if(attributesFilePath == null) {
+				System.out.print(entry.getKey() + " ");
+			}
+			else {
+				System.out.println(entry.getKey() + ": " + entry.getValue().getAttributes().toString());
+			}
 		}
 		System.out.println();
 		
 		// Print second set of products
 		System.out.println("Second set of products");
 		for(Entry<String, Product> entry : secondProductSet.entrySet()) {
-			System.out.print(entry.getKey() + " ");
+			if(attributesFilePath == null) {
+				System.out.print(entry.getKey() + " ");
+			}
+			else {
+				System.out.println(entry.getKey() + ": " + entry.getValue().getAttributes().toString());
+			}
 		}
 		
 	} 
