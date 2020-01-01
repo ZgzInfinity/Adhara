@@ -14,7 +14,6 @@ package Mincut;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +32,51 @@ public class Mincut {
 	// Number of iterations for this algorithm
 	private static int ATTEMPTS = 20;
 	
+	// Seed for Random class
+	private static Random random = new Random();
+	
+	/**
+	 * 
+	 * @param length is the length of the array which contains graph vertex
+	 * @return a pseudo-random integer between 0 and length-1 using Math.random method
+	 */
+	public static int getRandomMath(int length) {
+		return (int)(Math.random() * length);
+	}
+	
+	/**
+	 * 
+	 * @param length is the length of the array which contains graph vertex
+	 * @return a pseudo-random integer between 0 and length-1 using Random.nextInt method
+	 */
+	public static int getRandomRandomNextInt(int length) {		
+		return random.nextInt(length);
+		
+	}
+	
+	/**
+	 * 
+	 * @param length is the length of the array which contains graph vertex
+	 * @return a pseudo-random integer between 0 and length-1 using Random.ints method
+	 */
+	public static int getRandomRandomInts(int length) {		
+		return random.ints(0, length).findFirst().getAsInt();
+		
+	}
+	
+	/**
+	 * 
+	 * @param length is the length of the array which contains graph vertex
+	 * @return a pseudo-random integer between 0 and length-1
+	 */
+	public static int getRandomNumber(int length) {
+		// Comment and uncomment in order to use different random number generators
+		
+		// return getRandomRandomNextInt(length);
+		return getRandomRandomInts(length);
+		// return getRandomMath(length);
+	}
+	
 	
 	/**
 	 * 
@@ -49,7 +93,6 @@ public class Mincut {
 		// Open the file that contains the matrix the products 
 		Scanner input;
 		
-		
 		try {
 			input = new Scanner(productsFile);
 			BufferedReader br = null;
@@ -62,8 +105,6 @@ public class Mincut {
 					br = null;
 				}
 			}
-			
-			
 			
 			// Stores the number of products (first line of the file
 			int numProducts = Integer.parseInt(input.next());
@@ -120,7 +161,7 @@ public class Mincut {
 					String s = input.next();
 					// If the elements are different and the have been bought at the same time
 					if (i != j && !s.contentEquals("0")) {
-						// Creation of a edge between both vertices
+						// Creation of a edge between both vertices given weight
 						Edge e = new Edge(Integer.parseInt(s), graph.get(j.toString()));
 						adjNodes.put(j.toString(), e);
 					}
@@ -151,11 +192,9 @@ public class Mincut {
 			Object key [] = graph.keySet().toArray();
 			String vertexKeys [] = Arrays.copyOf(key,key.length,String[].class);
 			
-			// Generator of random numbers
-			Random random = new Random(); 
-			
 			// The first node is chosen randomly between the vertices of the graph
-			int random1 = random.nextInt(vertexKeys.length);
+			int random1 = getRandomNumber(vertexKeys.length);
+			
 			Node node1 = graph.get(vertexKeys[random1]);
 				
 			// Check if the vertex has another adyacent vertex
@@ -177,8 +216,9 @@ public class Mincut {
 			}
 					
 			// The second vertex if chosen between the rest of the vertices of the graph
-			// which are connected with the fisrt one
-			int random2 = random.nextInt(edgesKeys.size());
+			// which are connected with the first one
+			int random2 = getRandomNumber(edgesKeys.size());
+			
 			String nodeKey = edgesKeys.get(random2);
 			Node node2 = node1.getAdjNodes().get(nodeKey).getVertex();
 					
@@ -192,9 +232,6 @@ public class Mincut {
 			unionProducts.putAll(node1.getProducts());
 			// Put all products of the second node into the union
 			unionProducts.putAll(node2.getProducts());
-					
-					
-			// There are no repeated elements because the sets are disjointed
 					
 			// Deleted the adjacent vertices connected with the chosen ones
 			node1.getAdjNodes().remove(node2.getId());
@@ -214,6 +251,7 @@ public class Mincut {
 						node1.getAdjNodes().put(entry.getKey(), entry.getValue());
 					}
 				}
+			// Join (contract) selected vertices
 			joinOfVertices(node1, node2, unionProducts, graph);
 			}
 			else {
@@ -275,7 +313,15 @@ public class Mincut {
 		graph.put(newNode.getId(), newNode);
 	}
 	
+	
+	/**
+	 * 
+	 * @param initGraph is the initial graph (unmodified)
+	 * @param graph is the graph after applying Karger's algorithm
+	 * @returns cut value of the given graph between its two subsets
+	 */
 	public static int getCutValue(Hashtable <String, Node> initGraph, Hashtable <String, Node> graph) {
+		// Get node containing first set of products
 		Node firstSet = (Node)graph.values().toArray()[0];
 		
 		int cut = 0;
@@ -307,10 +353,9 @@ public class Mincut {
 	/**
 	 * 
 	 * @param args[0] is the file which contains the matrix of products
-	 * Finds a partition close to the optimum of the products using the karger
-	 * algorithm in order to resolve the minimun cut problem 
+	 * Finds a partition close to the optimum of the products using the karger's
+	 * algorithm in order to resolve the minimum cut problem 
 	 */
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
 		// Check if the number of parameters is correct
@@ -322,12 +367,13 @@ public class Mincut {
 		}
 		String attributesFilePath = null;
 		if (args.length == 2) {
+			// Get the file path which contains the products' attributes
 			attributesFilePath = args[1];	
 		}
 		// Get the file which contains the products matrix
 		File file = new File(args[0]);	
 		
-		// Store init graph for cut value checking
+		// Store initial graph for cut value checking
 		Hashtable <String, Node> initGraph = readProducts(file, attributesFilePath);
 		
 		int minimumCut = Integer.MAX_VALUE;
@@ -343,7 +389,7 @@ public class Mincut {
 			// Read the products from the file and store them in the graph
 			Hashtable <String, Node> graph = readProducts(file, attributesFilePath);
 			
-			// Execution of the karger algorithm to resolve the mincut problem
+			// Execution of the karger's algorithm to resolve the mincut problem
 			karger(graph);
 			
 			// Get cut value for this iteration
@@ -367,9 +413,11 @@ public class Mincut {
 		System.out.println("First set of products");
 		for(Entry<String, Product> entry : firstProductSet.entrySet()) {
 			if(attributesFilePath == null) {
+				// Output format if there are not attributes provided
 				System.out.print(entry.getKey() + " ");
 			}
 			else {
+				// Output format if there are attributes provided
 				System.out.println(entry.getKey() + ": " + entry.getValue().getAttributes().toString());
 			}
 		}
@@ -379,9 +427,11 @@ public class Mincut {
 		System.out.println("Second set of products");
 		for(Entry<String, Product> entry : secondProductSet.entrySet()) {
 			if(attributesFilePath == null) {
+				// Output format if there are not attributes provided
 				System.out.print(entry.getKey() + " ");
 			}
 			else {
+				// Output format if there are attributes provided
 				System.out.println(entry.getKey() + ": " + entry.getValue().getAttributes().toString());
 			}
 		}
