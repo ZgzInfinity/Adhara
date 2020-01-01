@@ -10,8 +10,6 @@
  */
 
 
-package Mincut;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,14 +34,19 @@ public class Mincut {
 	// Graph size (vertices) bound to execute directly karger's algorithm in karger-stein
 	private static int GRAPH_SIZE_BOUND = 6;
 	// Number of iterations for this algorithm
-	private static int ATTEMPTS = 20;
+	private static int ATTEMPTS = 1;
 	
 	// Seed for Random class
 	private static Random random = new Random();
+
+	// Code for selected random number generator
+	private static int selectedRG = 0;
 	
 	// Store initial graph for cut value checking
 	private static Hashtable <String, Node> initGraph;
 	
+
+
 	/**
 	 * Makes a deep copy of any Java object that is passed.
 	 * Obtained from:
@@ -64,6 +67,8 @@ public class Mincut {
 	   }
 	 }
 	
+
+
 	/**
 	 * 
 	 * @param length is the length of the array which contains graph vertex
@@ -73,6 +78,8 @@ public class Mincut {
 		return (int)(Math.random() * length);
 	}
 	
+
+
 	/**
 	 * 
 	 * @param length is the length of the array which contains graph vertex
@@ -83,6 +90,8 @@ public class Mincut {
 		
 	}
 	
+
+
 	/**
 	 * 
 	 * @param length is the length of the array which contains graph vertex
@@ -93,20 +102,27 @@ public class Mincut {
 		
 	}
 	
+
+
 	/**
 	 * 
 	 * @param length is the length of the array which contains graph vertex
 	 * @return a pseudo-random integer between 0 and length-1
 	 */
 	public static int getRandomNumber(int length) {
-		// Comment and uncomment in order to use different random number generators
-		
-		// return getRandomRandomNextInt(length);
-		return getRandomRandomInts(length);
-		// return getRandomMath(length);
+		if(selectedRG == 1){
+			return getRandomRandomNextInt(length); 
+		}
+		else if(selectedRG == 2){
+			return getRandomRandomInts(length);
+		}
+		else{
+			return getRandomMath(length);
+		}
 	}
 	
 	
+
 	/**
 	 * 
 	 * @param productsFile is the file which contains the matrix of products
@@ -242,7 +258,7 @@ public class Mincut {
 			// Safety check
 			if(edgesKeys.isEmpty()) {
 				System.err.println("Invalid graph, vertex not connected");
-				System.exit(3);
+				System.exit(6);
 			}
 					
 			// The second vertex if chosen between the rest of the vertices of the graph
@@ -287,7 +303,7 @@ public class Mincut {
 			else {
 				// The graph is not correct
 				System.err.println("Error the graph is invalid");
-				System.exit(2);
+				System.exit(5);
 			}
 		}
 	}
@@ -428,7 +444,11 @@ public class Mincut {
 	
 	/**
 	 * 
-	 * @param args[0] is the file which contains the matrix of products
+	 * @param args[0] is the flag that specifies if karger's o karger-stein's algorithm will be used
+	 * @param args[1] is the flag that specifies the random number generator method
+	 * @param args[2] is the number of attemps (iterations) for increasing success probability
+	 * @param args[3] is the file which contains the matrix of products
+	 * @param args[4] is the file which contains the products' attributes
 	 * Finds a partition close to the optimum of the products using the karger's
 	 * algorithm in order to resolve the minimum cut problem 
 	 */
@@ -436,19 +456,43 @@ public class Mincut {
 	public static void main(String[] args) {
 		
 		// Check if the number of parameters is correct
-		if (args.length != 1 && args.length != 2) {
+		if (args.length != 4 && args.length != 5) {
 			// Wrong number of parameters introduced
 			System.err.println("Wrong number of parameters");
-			System.err.println("Invoke like mincut <matrixFile> <productsFile>");
+			System.err.println("Invoke like mincut <-k | -ks> <-rg1 | -rg2 | -rg3> <NUM_ATTEMPS> <matrixFile> [<productsFile>]");
 			System.exit(1);
 		}
+		if(args[1].equals("-rg1")){
+			// Use getRandomRandomNextInt method
+			selectedRG = 1;
+		}
+		else if(args[1].equals("-rg2")){
+			// Use getRandomRandomInts method
+			selectedRG = 2;
+		}
+		else if(args[1].equals("-rg3")){
+			// Use getRandomMath method
+			selectedRG = 3;
+		}
+		else{
+			System.err.println("Invalid random number generator flag parameter");
+			System.exit(2);
+		}
+
+		// Store number of attemps for the algorithm
+		ATTEMPTS = Integer.parseInt(args[2]);
+		if(ATTEMPTS < 1){
+			System.err.println("Invalid number of attempts (must be > 0)");
+			System.exit(3);
+		}
+
 		String attributesFilePath = null;
-		if (args.length == 2) {
+		if (args.length == 5) {
 			// Get the file path which contains the products' attributes
-			attributesFilePath = args[1];	
+			attributesFilePath = args[4];	
 		}
 		// Get the file which contains the products matrix
-		File file = new File(args[0]);	
+		File file = new File(args[3]);	
 		
 		// Store initial graph for cut value checking
 		initGraph = readProducts(file, attributesFilePath);
@@ -466,13 +510,18 @@ public class Mincut {
 			// Read the products from the file and store them in the graph
 			Hashtable <String, Node> graph = (Hashtable<String, Node>) deepCopy(initGraph);
 			
-			// Comment and uncomment to switch between algorithm
-			
-			// Execution of the karger's algorithm to resolve the mincut problem
-			// karger(graph, MIN_NUMBER_VERTEX);
-			
-			// Execution of the karger-stein's algorithm to resolve the mincut problem
-			graph = kargerStein(graph);
+			if(args[0].equals("-k")){
+				// Execution of the karger's algorithm to resolve the mincut problem
+				karger(graph, MIN_NUMBER_VERTEX);
+			}
+			else if(args[0].equals("-ks")){
+				// Execution of the karger-stein's algorithm to resolve the mincut problem
+				graph = kargerStein(graph);
+			}
+			else{
+				System.err.println("Invalid algorithm flag parameter");
+				System.exit(4);
+			}
 			
 			// Get cut value for this iteration
 			int cut = getCutValue(graph);
@@ -517,6 +566,7 @@ public class Mincut {
 				System.out.println(entry.getKey() + ": " + entry.getValue().getAttributes().toString());
 			}
 		}
+		System.out.println();
 		
 	} 
 }

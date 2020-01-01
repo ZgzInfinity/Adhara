@@ -9,7 +9,6 @@
  ********************************************
  */
 
-package Mincut;
 
 import java.io.Serializable;
 
