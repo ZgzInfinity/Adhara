@@ -3,7 +3,7 @@
  **** Algorithm for difficult problems ******
  **** Practice 1: Minimum cut problem *******
  **** Authors: ******************************
- **** Victor Peñasco Estivalez - 741294 *****
+ **** Victor Peï¿½asco Estivalez - 741294 *****
  **** Ruben Rodriguez Esteban - 737215 ******
  **** Date: 29 - 12 - 2019 ******************
  ********************************************
@@ -11,8 +11,15 @@
 
 package Mincut;
 
-public class Edge {
+import java.io.Serializable;
+
+public class Edge implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// Number of conections
 	int degree;
 

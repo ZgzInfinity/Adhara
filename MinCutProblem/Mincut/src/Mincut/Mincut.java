@@ -13,9 +13,13 @@
 package Mincut;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -27,13 +31,38 @@ import java.util.Scanner;
 
 public class Mincut {
 
-	// Minimun number of vertices to execute the karger algorithm
+	// Minimum number of vertices to execute the karger's algorithm
 	private static int MIN_NUMBER_VERTEX = 2;
+	// Graph size (vertices) bound to execute directly karger's algorithm in karger-stein
+	private static int GRAPH_SIZE_BOUND = 6;
 	// Number of iterations for this algorithm
 	private static int ATTEMPTS = 20;
 	
 	// Seed for Random class
 	private static Random random = new Random();
+	
+	// Store initial graph for cut value checking
+	private static Hashtable <String, Node> initGraph;
+	
+	/**
+	 * Makes a deep copy of any Java object that is passed.
+	 * Obtained from:
+	 * https://www.journaldev.com/17129/java-deep-copy-object
+	 */
+	 private static Object deepCopy(Object object) {
+	   try {
+	     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	     ObjectOutputStream outputStrm = new ObjectOutputStream(outputStream);
+	     outputStrm.writeObject(object);
+	     ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+	     ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
+	     return objInputStream.readObject();
+	   }
+	   catch (Exception e) {
+	     e.printStackTrace();
+	     return null;
+	   }
+	 }
 	
 	/**
 	 * 
@@ -178,15 +207,16 @@ public class Mincut {
 	
 	
 	/**
-	 * Make a partition close to the optimum of the products using the karger
-	 * algorithm in order to resolve the minimun cut problem
+	 * Make a partition close to the optimum of the products using the karger's
+	 * algorithm in order to resolve the minimum cut problem
 	 * @param graph is the graph of products which is going to be separated in two
 	 *		  disjointed sets
+	 * @param t is the number of vertices resulting from contracting
 	 */
-	public static void karger(Hashtable <String, Node> graph) {
+	public static void karger(Hashtable <String, Node> graph, int t) {
 		
 		// While two different vertices of the graph can be chosen
-		while (graph.size() > MIN_NUMBER_VERTEX) {
+		while (graph.size() > t) {
 				
 			// Get the two nodes to be joined.
 			Object key [] = graph.keySet().toArray();
@@ -316,11 +346,10 @@ public class Mincut {
 	
 	/**
 	 * 
-	 * @param initGraph is the initial graph (unmodified)
 	 * @param graph is the graph after applying Karger's algorithm
 	 * @returns cut value of the given graph between its two subsets
 	 */
-	public static int getCutValue(Hashtable <String, Node> initGraph, Hashtable <String, Node> graph) {
+	public static int getCutValue(Hashtable <String, Node> graph) {
 		// Get node containing first set of products
 		Node firstSet = (Node)graph.values().toArray()[0];
 		
@@ -351,11 +380,59 @@ public class Mincut {
 	
 	
 	/**
+	 * Make a partition close to the optimum of the products using the karger's
+	 * algorithm in order to resolve the minimum cut problem
+	 * @param graph is the graph of products which is going to be separated in two
+	 *		  disjointed sets
+	 * @return resulting graph from karger-stein algorithm
+	 */
+	@SuppressWarnings("unchecked")
+	public static Hashtable <String, Node> kargerStein(Hashtable <String, Node> graph) {
+		// Check number of vertices in graph
+		if(graph.size() <= GRAPH_SIZE_BOUND) {
+			// Execute karger's algorithm directly
+			karger(graph, MIN_NUMBER_VERTEX);
+			return graph;
+		}
+		else {
+			// Get t (integer upper bound)
+			int t = (int)(1 + (graph.size() / Math.sqrt(2.0)));
+			if((1 + (graph.size() / Math.sqrt(2.0))) > t) {
+				t++;
+			}
+			// Make a copy of graph
+			Hashtable <String, Node> graph1 = (Hashtable<String, Node>) deepCopy(graph);
+			// Execute karger's algorithm until t vertices in graph1
+			karger(graph1, t);
+			
+			// Make a copy of graph
+			Hashtable <String, Node> graph2 = (Hashtable<String, Node>) deepCopy(graph);
+			// Execute karger's algorithm until t vertices in graph2
+			karger(graph2, t);
+			
+			// Recursive call
+			graph1 = kargerStein(graph1);
+			graph2 = kargerStein(graph2);
+
+			// Return best graph (minimum cut)
+			if(getCutValue(graph1) < getCutValue(graph2)) {
+				return graph1;
+			}
+			else {
+				return graph2;
+			}
+		}
+	}
+	
+	
+	
+	/**
 	 * 
 	 * @param args[0] is the file which contains the matrix of products
 	 * Finds a partition close to the optimum of the products using the karger's
 	 * algorithm in order to resolve the minimum cut problem 
 	 */
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
 		// Check if the number of parameters is correct
@@ -374,7 +451,7 @@ public class Mincut {
 		File file = new File(args[0]);	
 		
 		// Store initial graph for cut value checking
-		Hashtable <String, Node> initGraph = readProducts(file, attributesFilePath);
+		initGraph = readProducts(file, attributesFilePath);
 		
 		int minimumCut = Integer.MAX_VALUE;
 		
@@ -387,13 +464,18 @@ public class Mincut {
 			// Stores the graph where the vertices are the products
 			// and the edges are the products that have been bought together		
 			// Read the products from the file and store them in the graph
-			Hashtable <String, Node> graph = readProducts(file, attributesFilePath);
+			Hashtable <String, Node> graph = (Hashtable<String, Node>) deepCopy(initGraph);
+			
+			// Comment and uncomment to switch between algorithm
 			
 			// Execution of the karger's algorithm to resolve the mincut problem
-			karger(graph);
+			// karger(graph, MIN_NUMBER_VERTEX);
+			
+			// Execution of the karger-stein's algorithm to resolve the mincut problem
+			graph = kargerStein(graph);
 			
 			// Get cut value for this iteration
-			int cut = getCutValue(initGraph, graph);
+			int cut = getCutValue(graph);
 			System.out.println("Cut value obtained is: " + cut);
 			
 			if(cut < minimumCut) {

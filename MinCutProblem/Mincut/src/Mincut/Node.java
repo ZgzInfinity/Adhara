@@ -13,13 +13,19 @@
 package Mincut;
 
 
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.List;
 
 
 
-public class Node {
+public class Node implements Serializable{
 	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// Vertex identifier
 	String id;
 	// Hash table of products
