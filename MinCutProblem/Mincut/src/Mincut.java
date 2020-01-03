@@ -11,13 +11,9 @@
 
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -49,22 +45,38 @@ public class Mincut {
 
 	/**
 	 * Makes a deep copy of any Java object that is passed.
-	 * Obtained from:
-	 * https://www.journaldev.com/17129/java-deep-copy-object
+	 * @param graph is the graph which is going to be duplicated
+	 * @returns a copy of the graph <<graph>>
 	 */
-	 private static Object deepCopy(Object object) {
-	   try {
-	     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-	     ObjectOutputStream outputStrm = new ObjectOutputStream(outputStream);
-	     outputStrm.writeObject(object);
-	     ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-	     ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
-	     return objInputStream.readObject();
-	   }
-	   catch (Exception e) {
-	     e.printStackTrace();
-	     return null;
-	   }
+	 @SuppressWarnings("unchecked")
+	private static Hashtable <String, Node> deepCopy(Hashtable <String, Node> graph) {
+		 // New graph to be created
+		 Hashtable <String, Node> newGraph = new Hashtable<>();
+		 for(Entry<String, Node> entry : graph.entrySet()) {
+			// Cloning the products with list of adjacent nodes initially empty
+			Hashtable<String, Product> newProducts = (Hashtable<String, Product>) entry.getValue().getProducts().clone();
+			Hashtable<String, Edge> newAdjNodes = new Hashtable<String, Edge>();
+			
+			// Create a new vertex in the graph with the product <<i>>
+			Node n = new Node(entry.getKey(), newProducts, newAdjNodes);
+			
+			// Added the product to the graph
+			newGraph.put(n.getId(), n);
+		 }
+		 // Loop for each adjacent node of the initial graph
+		 for(Entry<String, Node> entry : graph.entrySet()) {
+			 for(Entry<String, Edge> innerEntry : entry.getValue().getAdjNodes().entrySet()) {
+				 if(newGraph.containsKey(innerEntry.getValue().getVertex().getId())) {
+					// Create the new edge with pointer to vertex in the new graph
+					Edge newEdge = new Edge(innerEntry.getValue().getDegree(),
+											newGraph.get(innerEntry.getValue().getVertex().getId()));
+					// Assingment
+					newGraph.get(entry.getKey()).getAdjNodes().put(innerEntry.getValue().getVertex().getId(), newEdge);
+				 }
+			 }
+		 }
+		 // Return the initial graph duplicated in a new one
+		 return newGraph;
 	 }
 	
 
@@ -129,7 +141,6 @@ public class Mincut {
 	 * @return a graph whose vertices are the products read from the file << productsFile>>
 	 * 		   and whose edges are the pairs of products that have ever been bought together.
 	 */
-	@SuppressWarnings("resource")
 	public static  Hashtable <String, Node> readProducts(File productsFile, String attributesFilePath) {
 		// Stores the graph where the vertices are the products
 		// and the edges are the products that have been bought together
@@ -229,7 +240,7 @@ public class Mincut {
 	 *		  disjointed sets
 	 * @param t is the number of vertices resulting from contracting
 	 */
-	public static void karger(Hashtable <String, Node> graph, int t) {
+	public static Hashtable<String,Node> karger(Hashtable <String, Node> graph, int t) {
 		
 		// While two different vertices of the graph can be chosen
 		while (graph.size() > t) {
@@ -243,62 +254,63 @@ public class Mincut {
 			
 			Node node1 = graph.get(vertexKeys[random1]);
 				
-			// Check if the vertex has another adyacent vertex
+			// Check if the vertex has another adjacent vertex
 			if (!node1.getAdjNodes().isEmpty()) {
 					
-			// List that contains the edges of the other vertices with which it is connected
-			List<String> edgesKeys = new ArrayList<>();
-					
-			// For each adjacent vertex the edge is added
-			for(Entry<String, Edge> entry : node1.getAdjNodes().entrySet()) {
-				for (int i = 0; i < entry.getValue().getDegree(); i++) {
-					edgesKeys.add(entry.getKey());
-				}
-			}
-			// Safety check
-			if(edgesKeys.isEmpty()) {
-				System.err.println("Invalid graph, vertex not connected");
-				System.exit(6);
-			}
-					
-			// The second vertex if chosen between the rest of the vertices of the graph
-			// which are connected with the first one
-			int random2 = getRandomNumber(edgesKeys.size());
-			
-			String nodeKey = edgesKeys.get(random2);
-			Node node2 = node1.getAdjNodes().get(nodeKey).getVertex();
-					
-			// Remove the vertices of the graph which are going to be joined in a new one
-			graph.remove(node1.getId());
-			graph.remove(node2.getId());
-			
-			// Union of hashtable
-			Hashtable<String, Product> unionProducts = new Hashtable<>();
-			// Put all products of the first node into the union
-			unionProducts.putAll(node1.getProducts());
-			// Put all products of the second node into the union
-			unionProducts.putAll(node2.getProducts());
-					
-			// Deleted the adjacent vertices connected with the chosen ones
-			node1.getAdjNodes().remove(node2.getId());
-			node2.getAdjNodes().remove(node1.getId());
-					
-			// For each edge if the second vertex
-			for(Entry<String, Edge> entry : node2.getAdjNodes().entrySet()) {
-				// Check if the edge is also connected with the first vertex
-				if (node1.getAdjNodes().containsKey(entry.getKey())) {
-					// Get the number of connections and add both of them
-					int degree1 = node1.getAdjNodes().get(entry.getKey()).getDegree();
-					int degree2 = entry.getValue().getDegree();
-					node1.getAdjNodes().get(entry.getKey()).setDegree(degree1 + degree2);
-					}
-					else {
-						// Add the edge to the first vertex
-						node1.getAdjNodes().put(entry.getKey(), entry.getValue());
+				// List that contains the edges of the other vertices with which it is connected
+				List<String> edgesKeys = new ArrayList<>();
+						
+				// For each adjacent vertex the edge is added
+				for(Entry<String, Edge> entry : node1.getAdjNodes().entrySet()) {
+					for (int i = 0; i < entry.getValue().getDegree(); i++) {
+						edgesKeys.add(entry.getKey());
 					}
 				}
-			// Join (contract) selected vertices
-			joinOfVertices(node1, node2, unionProducts, graph);
+				// Safety check
+				if(edgesKeys.isEmpty()) {
+					System.err.println("Invalid graph, vertex not connected");
+					System.exit(6);
+				}
+						
+				// The second vertex if chosen between the rest of the vertices of the graph
+				// which are connected with the first one
+				int random2 = getRandomNumber(edgesKeys.size());
+				
+				String nodeKey = edgesKeys.get(random2);
+				Node node2 = node1.getAdjNodes().get(nodeKey).getVertex();
+						
+				// Remove the vertices of the graph which are going to be joined in a new one
+				graph.remove(node1.getId());
+				graph.remove(node2.getId());
+				
+				// Union of hashtable
+				Hashtable<String, Product> unionProducts = new Hashtable<>();
+				// Put all products of the first node into the union
+				unionProducts.putAll(node1.getProducts());
+				// Put all products of the second node into the union
+				unionProducts.putAll(node2.getProducts());
+						
+				// Deleted the adjacent vertices connected with the chosen ones
+				node1.getAdjNodes().remove(node2.getId());
+				node2.getAdjNodes().remove(node1.getId());
+				
+				// For each edge of the second vertex
+				for(Entry<String, Edge> entry : node2.getAdjNodes().entrySet()) {
+					// Check if the edge is also connected with the first vertex
+					if (node1.getAdjNodes().containsKey(entry.getKey())) {
+						// Get the number of connections and add both of them
+						int degree1 = node1.getAdjNodes().get(entry.getKey()).getDegree();
+						int degree2 = entry.getValue().getDegree();
+						node1.getAdjNodes().get(entry.getKey()).setDegree(degree1 + degree2);
+						
+						}
+						else {
+							// Add the edge to the first vertex
+							node1.getAdjNodes().put(entry.getKey(), entry.getValue());
+						}
+					}
+				// Join (contract) selected vertices
+				joinOfVertices(node1, node2, unionProducts, graph);
 			}
 			else {
 				// The graph is not correct
@@ -306,6 +318,7 @@ public class Mincut {
 				System.exit(5);
 			}
 		}
+		return graph;
 	}
 	
 	
@@ -402,13 +415,11 @@ public class Mincut {
 	 *		  disjointed sets
 	 * @return resulting graph from karger-stein algorithm
 	 */
-	@SuppressWarnings("unchecked")
 	public static Hashtable <String, Node> kargerStein(Hashtable <String, Node> graph) {
 		// Check number of vertices in graph
 		if(graph.size() <= GRAPH_SIZE_BOUND) {
 			// Execute karger's algorithm directly
-			karger(graph, MIN_NUMBER_VERTEX);
-			return graph;
+			return karger(graph, MIN_NUMBER_VERTEX);
 		}
 		else {
 			// Get t (integer upper bound)
@@ -417,25 +428,23 @@ public class Mincut {
 				t++;
 			}
 			// Make a copy of graph
-			Hashtable <String, Node> graph1 = (Hashtable<String, Node>) deepCopy(graph);
-			// Execute karger's algorithm until t vertices in graph1
-			karger(graph1, t);
+			Hashtable <String, Node> graphCopy = (Hashtable<String, Node>) deepCopy(graph);
+			// Execute karger's algorithm until t vertices in graph
+			graph = karger(graph, t);
 			
-			// Make a copy of graph
-			Hashtable <String, Node> graph2 = (Hashtable<String, Node>) deepCopy(graph);
-			// Execute karger's algorithm until t vertices in graph2
-			karger(graph2, t);
+			// Execute karger's algorithm until t vertices in graphCopy
+			graphCopy = karger(graphCopy, t);
 			
 			// Recursive call
-			graph1 = kargerStein(graph1);
-			graph2 = kargerStein(graph2);
+			graph = kargerStein(graph);
+			graphCopy = kargerStein(graphCopy);
 
 			// Return best graph (minimum cut)
-			if(getCutValue(graph1) < getCutValue(graph2)) {
-				return graph1;
+			if(getCutValue(graph) < getCutValue(graphCopy)) {
+				return graph;
 			}
 			else {
-				return graph2;
+				return graphCopy;
 			}
 		}
 	}
@@ -446,20 +455,19 @@ public class Mincut {
 	 * 
 	 * @param args[0] is the flag that specifies if karger's o karger-stein's algorithm will be used
 	 * @param args[1] is the flag that specifies the random number generator method
-	 * @param args[2] is the number of attemps (iterations) for increasing success probability
+	 * @param args[2] is the number of attempts (iterations) for increasing success probability
 	 * @param args[3] is the file which contains the matrix of products
 	 * @param args[4] is the file which contains the products' attributes
 	 * Finds a partition close to the optimum of the products using the karger's
 	 * algorithm in order to resolve the minimum cut problem 
 	 */
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
 		// Check if the number of parameters is correct
 		if (args.length != 4 && args.length != 5) {
 			// Wrong number of parameters introduced
 			System.err.println("Wrong number of parameters");
-			System.err.println("Invoke like mincut <-k | -ks> <-rg1 | -rg2 | -rg3> <NUM_ATTEMPS> <matrixFile> [<productsFile>]");
+			System.err.println("Invoke like mincut <-k | -ks> <-rg1 | -rg2 | -rg3> <NUM_ATTEMPTS> <matrixFile> [<productsFile>]");
 			System.exit(1);
 		}
 		if(args[1].equals("-rg1")){
@@ -479,7 +487,7 @@ public class Mincut {
 			System.exit(2);
 		}
 
-		// Store number of attemps for the algorithm
+		// Store number of attempts for the algorithm
 		ATTEMPTS = Integer.parseInt(args[2]);
 		if(ATTEMPTS < 1){
 			System.err.println("Invalid number of attempts (must be > 0)");
@@ -508,11 +516,11 @@ public class Mincut {
 			// Stores the graph where the vertices are the products
 			// and the edges are the products that have been bought together		
 			// Read the products from the file and store them in the graph
-			Hashtable <String, Node> graph = (Hashtable<String, Node>) deepCopy(initGraph);
+			Hashtable <String, Node> graph = deepCopy(initGraph);
 			
 			if(args[0].equals("-k")){
 				// Execution of the karger's algorithm to resolve the mincut problem
-				karger(graph, MIN_NUMBER_VERTEX);
+				graph = karger(graph, MIN_NUMBER_VERTEX);
 			}
 			else if(args[0].equals("-ks")){
 				// Execution of the karger-stein's algorithm to resolve the mincut problem

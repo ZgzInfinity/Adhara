@@ -10,15 +10,10 @@
  */
 
 
-import java.io.Serializable;
 import java.util.List;
 
-public class Product implements Serializable{
+public class Product{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	// Identifier of the product
 	private String id;

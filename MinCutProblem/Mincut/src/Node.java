@@ -11,19 +11,13 @@
 
 
 
-import java.io.Serializable;
 import java.util.Hashtable;
-import java.util.List;
 
 
 
-public class Node implements Serializable{
+public class Node{
 	
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	// Vertex identifier
 	String id;
 	// Hash table of products

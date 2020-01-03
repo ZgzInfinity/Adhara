@@ -10,14 +10,9 @@
  */
 
 
-import java.io.Serializable;
 
-public class Edge implements Serializable{
+public class Edge{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	// Number of conections
 	int degree;
