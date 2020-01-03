@@ -1,4 +1,7 @@
+#!/bin/bash
+# Compile program
 javac Mincut/src/*.java
+# Execute test cases
 echo "testSet_4 test cases execution"
 time java -classpath Mincut/src Mincut -k -rg1 6184 TestSets/testSet_4
 time java -classpath Mincut/src Mincut -ks -rg1 64 TestSets/testSet_4
@@ -27,6 +30,5 @@ time java -classpath Mincut/src Mincut -k -rg2 26 TestSets/test3
 time java -classpath Mincut/src Mincut -ks -rg2 8 TestSets/test3
 time java -classpath Mincut/src Mincut -k -rg3 26 TestSets/test3
 time java -classpath Mincut/src Mincut -ks -rg3 8 TestSets/test3
-
-
+# Remove binary files
 rm Mincut/src/*.class
