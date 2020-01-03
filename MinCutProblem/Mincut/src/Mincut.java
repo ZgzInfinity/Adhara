@@ -434,17 +434,15 @@ public class Mincut {
 			
 			// Execute karger's algorithm until t vertices in graphCopy
 			graphCopy = karger(graphCopy, t);
-			
-			// Recursive call
-			graph = kargerStein(graph);
-			graphCopy = kargerStein(graphCopy);
 
 			// Return best graph (minimum cut)
 			if(getCutValue(graph) < getCutValue(graphCopy)) {
-				return graph;
+				// Recursive call
+				return kargerStein(graph);
 			}
 			else {
-				return graphCopy;
+				// Recursive call
+				return kargerStein(graphCopy);
 			}
 		}
 	}
