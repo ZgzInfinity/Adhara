@@ -13,11 +13,11 @@ public class MoveToFront {
 		}	
 	}
 	
-	public static List<Integer> m2f(String text) {
+	public static String m2f(String text) {
 		if(alphabet.isEmpty()) {
 			createAlphabet();
 		}
-		List<Integer> result = new ArrayList<>();
+		String result = "";
 		int n = text.length();
 		for(int i = 0; i < n; i++) {
 			int idx = alphabet.indexOf(Character.toString(text.charAt(i)));
@@ -25,7 +25,7 @@ public class MoveToFront {
 				System.err.println("Invalid character");
 				System.exit(1);
 			}
-			result.add(idx);
+			result += idx + " ";
 			alphabet.addFirst(alphabet.remove(idx));
 		}
 		return result;
