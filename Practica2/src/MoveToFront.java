@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class MoveToFront {
 		}	
 	}
 	
-	public static String m2f(String text) {
+	public static String moveToFront(String text) {
 		if(alphabet.isEmpty()) {
 			createAlphabet();
 		}
@@ -27,6 +28,20 @@ public class MoveToFront {
 			}
 			result += idx + " ";
 			alphabet.addFirst(alphabet.remove(idx));
+		}
+		return result;
+	}
+	
+	
+	public static String moveToFrontInverse(String text) {
+		if(alphabet.isEmpty()) {
+			createAlphabet();
+		}
+		String result = "";
+		List<String> numberList = Arrays.asList(text.trim().split(" "));
+		for(String number : numberList) {
+			result += alphabet.get(Integer.parseInt(number));
+			alphabet.addFirst(alphabet.remove(Integer.parseInt(number)));
 		}
 		return result;
 	}

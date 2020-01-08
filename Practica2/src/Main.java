@@ -16,18 +16,16 @@ public class Main {
 
 	public static void main(String[] args) {
 		if(args.length == 2) {
+			String text;
 			if(args[0].contentEquals("-c")) {
 				// Open file
-				String text;
 				try {
-					text = new String(Files.readAllBytes(Paths.get(args[1])), StandardCharsets.UTF_8);
-					// System.out.println(text);
-					
+					text = new String(Files.readAllBytes(Paths.get(args[1])), StandardCharsets.UTF_8);	
 					SuffixArray sa = new SuffixArray(text);
 					List<Integer> si = sa.getSuffixIndex();
 					BurrowsWheeler.bwt2(text);
 					String transformed = BurrowsWheeler.bwt(text, si);
-					String result = MoveToFront.m2f(transformed);
+					String result = MoveToFront.moveToFront(transformed);
 
 					BufferedWriter writer = null;
 					try {
@@ -49,7 +47,30 @@ public class Main {
 				}
 			}
 			else if(args[0].contentEquals("-u")) {
-				
+				try {
+					text = new String(Files.readAllBytes(Paths.get(args[1])), StandardCharsets.UTF_8);
+					text = MoveToFront.moveToFrontInverse(text);
+					text = BurrowsWheeler.bwtInverse(text);
+					BufferedWriter writer = null;
+					try {
+						File file = new File(args[1]);
+						writer = new BufferedWriter(new FileWriter(file));
+			            writer.write(text);
+					}
+					catch (Exception e) {
+				        e.printStackTrace();
+				    } 
+					finally {
+				        try {
+				            writer.close();
+				        }
+				        catch (Exception e) {
+				        }
+				    }
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			else {
 				System.err.println("Unknown parameter");

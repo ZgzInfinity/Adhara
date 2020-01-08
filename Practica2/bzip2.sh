@@ -18,6 +18,6 @@ then
     javac src/*.java
     # Execute java programm
     ./huf -d $2
-    # java -classpath src Main -u $2
+    java -classpath src Main -u $2
     exit 0
 fi

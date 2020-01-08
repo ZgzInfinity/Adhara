@@ -39,4 +39,55 @@ public class BurrowsWheeler {
 		}
 		return result;
 	}
+	
+	public static String bwtInverse(String lastColumn) {
+		// Create C vector
+		int preC[] = new int[256];
+		// Initialize array to 0
+		for(int i = 0; i < 256; i++) {
+			preC[i] = 0;
+		}
+		int n = lastColumn.length();
+		for (int i = 0; i < n; i++) {
+			preC[(int)lastColumn.charAt(i)] += 1;
+		}
+		int numSmallerChars = 0;
+		int aux;
+		for(int i = 1; i < 256; i++) {
+			aux = preC[i];
+			preC[i] = numSmallerChars;
+			numSmallerChars +=  aux;
+		}
+		List<Integer> C = new ArrayList<>();
+		// Create C array
+		for (int i = 0; i < n; i++) {
+			C.add(preC[(int)lastColumn.charAt(i)]);
+		}
+		// Reuse preC for constructing indexI array
+		// Initialize array to 0
+		for(int i = 0; i < 256; i++) {
+			preC[i] = 0;
+		}
+		List<Integer> indexI = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			// Update frequency of vector
+			preC[(int)lastColumn.charAt(i)] += 1;
+			indexI.add(preC[(int)lastColumn.charAt(i)]);
+		}
+		// Create LF array (C + indexI)
+		List<Integer> LF = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			LF.add(C.get(i) + indexI.get(i) - 1);
+		}
+		// Reconstruct original text
+		String result = "";
+		int r = 0;
+		char c = lastColumn.charAt(r);
+		for(int i = 0; i < n; i++) {
+			result = c + result;
+			r = LF.get(r);
+			c = lastColumn.charAt(r);
+		}
+		return result;
+	}
 }
