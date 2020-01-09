@@ -1,6 +1,6 @@
 # Authors:
-# Peñasco Estívalez, Víctor Miguel  741294
-# Rodríguez Esteban, Rubén          737215
+# Penasco Estivalez, Victor Miguel  741294
+# Rodriguez Esteban, Ruben          737215
 
 # Import libraries
 import random

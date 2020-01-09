@@ -20,10 +20,11 @@ public class Main {
 			if(args[0].contentEquals("-c")) {
 				// Open file
 				try {
-					text = new String(Files.readAllBytes(Paths.get(args[1])), StandardCharsets.UTF_8);	
+					text = new String(Files.readAllBytes(Paths.get(args[1])), StandardCharsets.UTF_8);
+					char ETX = 0x03;
+					text += ETX;
 					SuffixArray sa = new SuffixArray(text);
 					List<Integer> si = sa.getSuffixIndex();
-					BurrowsWheeler.bwt2(text);
 					String transformed = BurrowsWheeler.bwt(text, si);
 					String result = MoveToFront.moveToFront(transformed);
 
@@ -50,12 +51,13 @@ public class Main {
 				try {
 					text = new String(Files.readAllBytes(Paths.get(args[1])), StandardCharsets.UTF_8);
 					text = MoveToFront.moveToFrontInverse(text);
-					text = BurrowsWheeler.bwtInverse(text);
+					String result = BurrowsWheeler.bwtInverse(text);
 					BufferedWriter writer = null;
 					try {
 						File file = new File(args[1]);
 						writer = new BufferedWriter(new FileWriter(file));
-			            writer.write(text);
+			            writer.write(result);
+			            writer.close();
 					}
 					catch (Exception e) {
 				        e.printStackTrace();
@@ -65,6 +67,7 @@ public class Main {
 				            writer.close();
 				        }
 				        catch (Exception e) {
+				        	e.printStackTrace();
 				        }
 				    }
 				}

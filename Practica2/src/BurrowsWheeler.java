@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BurrowsWheeler {
 	
@@ -83,7 +85,7 @@ public class BurrowsWheeler {
 		String result = "";
 		int r = 0;
 		char c = lastColumn.charAt(r);
-		for(int i = 0; i < n; i++) {
+		for(int i = 0; i < n - 1; i++) {		
 			result = c + result;
 			r = LF.get(r);
 			c = lastColumn.charAt(r);
