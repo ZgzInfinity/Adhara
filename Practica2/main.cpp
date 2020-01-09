@@ -69,7 +69,8 @@ void compress(string file_name){
             if(inputFile.eof()) break;
             table.increment(c);
         }
-        file_name.append(".huf");
+        file_name = file_name.substr(0, file_name.size() - 2);
+        file_name.append(".bz3");
         // Preparar fichero de escritura
         ofstream outputFile(file_name, ios::binary);
 
@@ -161,7 +162,6 @@ void compress(string file_name){
  */
 void uncompress(string file_name){
     string file_name_output = file_name;
-    file_name.append(".huf");
     ifstream inputFile(file_name, ios::binary);
     if (inputFile.is_open()){ //file_name is open
         unsigned char codigoCasos = 0;

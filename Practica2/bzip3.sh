@@ -1,4 +1,4 @@
-if [ $1 = "-c" ]
+if [ "$1" = "-c" ]
 then
     # Compile c++ programm (Huffman)
     make
@@ -6,11 +6,13 @@ then
     javac src/*.java
     # Execute java programm
     java -classpath src Main -c $2
-    ./huf -c $2
-    rm $2
+    partName="BW"
+    file=$2$partName
+    ./huf -c $file
+    rm $file
     exit 0
 fi
-if [ $1 = "-u" ]
+if [ "$1" = "-u" ]
 then
     # Compile c++ programm (Huffman)
     make
