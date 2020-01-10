@@ -62,7 +62,7 @@ public class SuffixArray {
 		int i = left;
 		int j = right;
 		int aux;
-		// While the searchings dont intersect
+		// While the searchings don't intersect
 		while (i < j) {
 			// Search an element greater than pivot
 			while (text.substring(suffixIndex.get(i), n).compareTo(text.substring(pivot, n)) <= 0 && i < j) {

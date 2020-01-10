@@ -25,5 +25,8 @@ then
     echo "Uncompresing $2 file"
     Huffman/huf -d $2
     java -classpath bin Main -u $2
+    partName="BW"
+    tempFile=$2$partName
+    rm $tempFile
     exit 0
 fi

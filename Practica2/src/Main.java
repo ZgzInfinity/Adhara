@@ -8,8 +8,10 @@
  *********************************************
  */ 
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -21,13 +23,13 @@ public class Main {
 	public static void main(String[] args) {
 		// Check the number of parameters
 		if(args.length == 2) {
-			String text;
-			// Compression mode
+			String text = "";
+			// Compress mode
 			if(args[0].contentEquals("-c")) {
 				try {
 					// Open the file which is going to be compressed
 					text = new String(Files.readAllBytes(Paths.get(args[1])), StandardCharsets.UTF_8);
-
+					System.out.println("read");
 					// Add termination character to file content
 					char ETX = 0x03;
 					text += ETX;
@@ -35,7 +37,6 @@ public class Main {
 					// Create the suffixes array
 					SuffixArray sa = new SuffixArray(text);
 					List<Integer> si = sa.getSuffixIndex();
-
 					// Apply Burrows Wheeler transformation and move to front algorithm to the result
 					String transformed = BurrowsWheeler.bwt(text, si);
 					String result = MoveToFront.moveToFront(transformed);
@@ -71,18 +72,17 @@ public class Main {
 				}
 			}
 			else if(args[0].contentEquals("-u")) {
-				// Uncompression mode
+				// Uncompress mode
 				try {
-					// Read the content of the file which is going ti be uncrompressed
-					text = new String(Files.readAllBytes(Paths.get(args[1])), StandardCharsets.UTF_8);
-
-					// Aplly move to front inverse algorithm and Burrows Wheeler inverse transformation to the result
+					// Read the content of the file which is going to be uncompressed
+					text = new String(Files.readAllBytes(Paths.get(args[1] + "BW")), StandardCharsets.UTF_8);
+					// Apply move to front inverse algorithm and Burrows Wheeler inverse transformation to the result
 					text = MoveToFront.moveToFrontInverse(text);
 					String result = BurrowsWheeler.bwtInverse(text);
 					BufferedWriter writer = null;
 					try {
 						// Open the file where the result is going to be write
-						File file = new File(args[1]);
+						File file = new File(args[1].substring(0, args[1].length() - 4));
 						writer = new BufferedWriter(new FileWriter(file));
 						// Write the content in the file
 						writer.write(result);

@@ -26,7 +26,7 @@ public class BurrowsWheeler {
 	public static String bwt(String text, List<Integer> suffixIndex) {
 		// Final result
 		String result = "";
-		// Iterate through suffixe index list
+		// Iterate through suffixes index list
 		for(Integer idx : suffixIndex) {
 			if(idx == 0) {
 				// Get last char 

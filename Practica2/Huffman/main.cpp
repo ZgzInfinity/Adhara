@@ -161,7 +161,7 @@ void compress(string file_name){
  * comprimido en <file_name>.huf.
  */
 void uncompress(string file_name){
-    string file_name_output = file_name;
+    string file_name_output = file_name + "BW";
     ifstream inputFile(file_name, ios::binary);
     if (inputFile.is_open()){ //file_name is open
         unsigned char codigoCasos = 0;
