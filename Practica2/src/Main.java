@@ -8,10 +8,8 @@
  *********************************************
  */ 
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -29,11 +27,9 @@ public class Main {
 				try {
 					// Open the file which is going to be compressed
 					text = new String(Files.readAllBytes(Paths.get(args[1])), StandardCharsets.UTF_8);
-					System.out.println("read");
 					// Add termination character to file content
 					char ETX = 0x03;
 					text += ETX;
-
 					// Create the suffixes array
 					SuffixArray sa = new SuffixArray(text);
 					List<Integer> si = sa.getSuffixIndex();

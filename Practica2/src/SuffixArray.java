@@ -10,6 +10,7 @@
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SuffixArray {
@@ -28,71 +29,78 @@ public class SuffixArray {
 	 * @return a SuffixArray instance
 	 */
 	public SuffixArray(String text) {
-		// Assigment of the fields
+		// Assignment of the fields
 		this.text = text;
 		this.n = text.length();
 		this.suffixIndex = new ArrayList<>();
 		buildSuffixArray();
 	}
 
+	
+	
 	/**
-	 * Fills the list of sufixes with the content of the file
+	 * Fills the list of suffixes with the content of the file
 	 */
-	public void buildSuffixArray() {
-		// Initialize suffix index list
+	public void buildSuffixArray() 
+	{ 
+		Suffix[] su = new Suffix[n];
+		// Store each char in suffix array with its index
+		for (int i = 0; i < n; i++) { 
+			su[i] = new Suffix(i, text.charAt(i), 0); 
+		}
+		// Store rank of each char
 		for (int i = 0; i < n; i++) {
-			// Add the new suffix i
-			suffixIndex.add(i);
+			if(i + 1 < n) {
+				su[i].next = su[i + 1].rank;
+			}
+			else {
+				su[i].next = -1;
+			}
+		}	
+
+		// First sorting step (according the 1st 2 char of each suffix)
+		Arrays.sort(su); 
+
+		// Create a new array
+		int[] ind = new int[n]; 
+		
+		// Sort suffix arrays using first 4 chars
+		for (int length = 4; length < 2 * n; length <<= 1) { 
+			// Assigning rank and index values to first suffix 
+			int rank = 0, prev = su[0].rank; 
+			su[0].rank = rank; 
+			ind[su[0].index] = 0;
+			// Calculate new ranks for each suffix
+			for (int i = 1; i < n; i++){ 
+				// If first rank and next ranks are same as 
+				// that of previous suffix in array, 
+				// assign the same new rank to this suffix
+				if (su[i].rank == prev && su[i].next == su[i - 1].next) { 
+					prev = su[i].rank; 
+					su[i].rank = rank; 
+				} 
+				else { 
+					// Otherwise increment rank and assign 
+					prev = su[i].rank; 
+					su[i].rank = ++rank; 
+				} 
+				ind[su[i].index] = i; 
+			} 
+			// Assign next rank to every suffix 
+			for (int i = 0; i < n; i++) { 
+				int nextP = su[i].index + length / 2; 
+				su[i].next = nextP < n ? 
+				su[ind[nextP]].rank : -1; 
+			}
+			// Sort the suffixes according to first k characters 
+			Arrays.sort(su); 
 		}
-		// Order the suffixes list using quicksort algorithm
-		sort(0, text.length() - 1);
+		// Store result in suffixIndex list
+		for (int i = 0; i < n; i++) {
+			suffixIndex.add(su[i].index);
+		}
 	}
 
-
-
-	/**
-	 * 
-	 * @param left is the upper bound of the search
-	 * @param right is the lower bound of the search
-	 */
-	public void sort(int left, int right) {
-		// Choose the first element as pivot
-		int pivot = suffixIndex.get(left);
-		// Establish the lower and upper bounds for searching
-		int i = left;
-		int j = right;
-		int aux;
-		// While the searchings don't intersect
-		while (i < j) {
-			// Search an element greater than pivot
-			while (text.substring(suffixIndex.get(i), n).compareTo(text.substring(pivot, n)) <= 0 && i < j) {
-				i++;
-			}
-			// Search an element lower than pivot
-			while (text.substring(suffixIndex.get(j), n).compareTo(text.substring(pivot, n)) > 0) {
-				j--;
-			}
-			// If there is not intersection
-			if (i < j) {
-				// Swap elements
-				aux = suffixIndex.get(i);
-				suffixIndex.set(i, suffixIndex.get(j));
-				suffixIndex.set(j, aux);
-			}
-		}
-		// Ubicate the pivot in order to have lower elements in its left and
-		// greater elements in its right
-		suffixIndex.set(left, suffixIndex.get(j));
-		suffixIndex.set(j, pivot);
-		if (left < j - 1) {
-			// Order left sublist 
-			sort(left, j - 1);
-		}
-		if (j + 1 < right) {
-			// Order right sublist
-			sort(j + 1, right);
-		}
-	}
 
 	/**
 	 * @return the text

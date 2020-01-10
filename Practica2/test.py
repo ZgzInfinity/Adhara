@@ -7,13 +7,13 @@ import random
 import numpy
 import sys
 
-if len(sys.argv) == 4 :
+if len$(sys.argv) == 4 :
     # Variable values if 3 arguments are provided
     NUM_CASES = int(sys.argv[1])
     MIN_NUM_PRODUCTS = int(sys.argv[2])
     MAX_NUM_PRODUCTS = int(sys.argv[3])
 else:
-    # Default values
+    # Defa$ult values
     NUM_CASES = 1
     MIN_NUM_PRODUCTS = 50
     MAX_NUM_PRODUCTS = 85
