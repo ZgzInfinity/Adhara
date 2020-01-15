@@ -32,8 +32,29 @@ public class SuffixArray {
 		// Assignment of the fields
 		this.text = text;
 		this.n = text.length();
+		int[] sa = new int[n + 3];
+		for(int i = 0; i < n; i++) {
+			sa[i] = (int) text.charAt(i);
+		}
+//		for(int i = n; i < n + 3; i++) {
+//			sa[i] = 0;
+//		}
+//		System.out.println(n);
+//		Integer[] result = new Integer[n];
+//		Skew.suffixArray(sa, result, n, 256);
+//		this.suffixIndex = Arrays.asList(result);
+//		this.suffixIndex = Arrays.asList(Skew.buildSuffixArray(sa, 0, n));
+		
 		this.suffixIndex = new ArrayList<>();
 		buildSuffixArray();
+		
+		List<Integer> suffixIndexCopy = Arrays.asList(Skew.buildSuffixArray(sa, 0, n));
+		for(int j = 0; j < n; j++) {
+			System.out.println(suffixIndex.get(j).toString() + " " + suffixIndexCopy.get(j).toString());
+		}
+		//n = n + 3;
+
+		
 	}
 
 	
@@ -71,7 +92,7 @@ public class SuffixArray {
 			su[0].rank = rank; 
 			ind[su[0].index] = 0;
 			// Calculate new ranks for each suffix
-			for (int i = 1; i < n; i++){ 
+			for (int i = 1; i < n; i++){
 				// If first rank and next ranks are same as 
 				// that of previous suffix in array, 
 				// assign the same new rank to this suffix
