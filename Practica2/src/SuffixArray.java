@@ -19,7 +19,7 @@ public class SuffixArray {
 	// Number of characters of the file
 	private int n;
 	// List of all suffixes
-	private List<Integer> suffixIndex;
+	private int[] suffixIndex;
 
 
 
@@ -35,7 +35,8 @@ public class SuffixArray {
 		for(int i = 0; i < n; i++) {
 			sa[i] = (int) text.charAt(i);
 		}
-		this.suffixIndex = Arrays.asList(Arrays.stream(Arrays.copyOfRange(Skew.buildSuffixArray(sa, 0, n), 0, n)).boxed().toArray(Integer[]::new));	
+		this.suffixIndex = Arrays.copyOfRange(Skew.buildSuffixArray(sa, 0, n), 0, n);	
+		// this.suffixIndex = Arrays.asList(Arrays.stream(Arrays.copyOfRange(Skew.buildSuffixArray(sa, 0, n), 0, n)).boxed().toArray(Integer[]::new));	
 	}
 
 	/**
@@ -55,14 +56,14 @@ public class SuffixArray {
 	/**
 	 * @return the suffixIndex
 	 */
-	public List<Integer> getSuffixIndex() {
+	public int[] getSuffixIndex() {
 		return suffixIndex;
 	}
 
 	/**
 	 * @param suffixIndex the suffixIndex to set
 	 */
-	public void setSuffixIndex(List<Integer> suffixIndex) {
+	public void setSuffixIndex(int[] suffixIndex) {
 		this.suffixIndex = suffixIndex;
 	}
 }

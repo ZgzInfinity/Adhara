@@ -32,10 +32,13 @@ public class Main {
 					text += ETX;
 					// Create the suffixes array
 					SuffixArray sa = new SuffixArray(text);
-					List<Integer> si = sa.getSuffixIndex();
+					int[] si = sa.getSuffixIndex();
+					System.out.println("suffix");
 					// Apply Burrows Wheeler transformation and move to front algorithm to the result
 					String transformed = BurrowsWheeler.bwt(text, si);
+					System.out.println("bwt");
 					String result = MoveToFront.moveToFront(transformed);
+					System.out.println("mtf");
 
 					// Write the result in a new file
 					BufferedWriter writer = null;
@@ -45,6 +48,7 @@ public class Main {
 						// Write the content in the file
 						writer = new BufferedWriter(new FileWriter(file));
 			            writer.write(result);
+			            System.out.println("written");
 					}
 					catch (Exception e) {
 						// Throw exception if the opening of the file goes bad

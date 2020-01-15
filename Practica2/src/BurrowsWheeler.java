@@ -23,18 +23,19 @@ public class BurrowsWheeler {
 	 * @param suffixIndex is the list of suffixes
 	 * @return the burrows wheeler transform applied to the input text
 	 */
-	public static String bwt(String text, List<Integer> suffixIndex) {
+	public static String bwt(String text, int[] suffixIndex) {
 		// Final result
 		String result = "";
+		int n = text.length();
 		// Iterate through suffixes index list
-		for(Integer idx : suffixIndex) {
-			if(idx == 0) {
+		for(int i = 0; i < n; i++) {
+			if(suffixIndex[i] == 0) {
 				// Get last char 
 				result += text.charAt(text.length() - 1);
 			}
 			else {
 				// Get left char
-				result += text.charAt(idx - 1);
+				result += text.charAt(suffixIndex[i] - 1);
 			}
 		}
 		// Return result
