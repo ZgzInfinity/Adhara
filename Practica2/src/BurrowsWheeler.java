@@ -23,19 +23,20 @@ public class BurrowsWheeler {
 	 * @param suffixIndex is the list of suffixes
 	 * @return the burrows wheeler transform applied to the input text
 	 */
-	public static String bwt(String text, int[] suffixIndex) {
+	public static char[] bwt(String text, int[] suffixIndex) {
 		// Final result
-		String result = "";
 		int n = text.length();
+		char[] result = new char[n];
 		// Iterate through suffixes index list
 		for(int i = 0; i < n; i++) {
 			if(suffixIndex[i] == 0) {
 				// Get last char 
-				result += text.charAt(text.length() - 1);
+				result[i] += text.charAt(text.length() - 1);
+				
 			}
 			else {
 				// Get left char
-				result += text.charAt(suffixIndex[i] - 1);
+				result[i] += text.charAt(suffixIndex[i] - 1);
 			}
 		}
 		// Return result
@@ -48,7 +49,7 @@ public class BurrowsWheeler {
 	 * @param lastColumn is the last column of the bwt matrix
 	 * @return the inverse of the burrows wheeler transformed
 	 */
-	public static String bwtInverse(String lastColumn) {
+	public static char[] bwtInverse(char[] lastColumn, int n) {
 		// Create C vector
 		int preC[] = new int[256];
 		// Create a list which contains ith occurrence of character j
@@ -57,12 +58,11 @@ public class BurrowsWheeler {
 		for(int i = 0; i < 256; i++) {
 			preC[i] = 0;
 		}
-		int n = lastColumn.length();
 		// Get the frequency of each character
 		for (int i = 0; i < n; i++) {
-			preC[(int)lastColumn.charAt(i)] += 1;
+			preC[(int)lastColumn[i]] += 1;
 			// Storing the jth occurrence of the character i
-			indexI.add(preC[(int)lastColumn.charAt(i)]);
+			indexI.add(preC[(int)lastColumn[i]]);
 		}
 		int numSmallerChars = 0;
 		int aux;
@@ -75,7 +75,7 @@ public class BurrowsWheeler {
 		List<Integer> C = new ArrayList<>();
 		// Create C array
 		for (int i = 0; i < n; i++) {
-			C.add(preC[(int)lastColumn.charAt(i)]);
+			C.add(preC[(int)lastColumn[i]]);
 		}
 		// Create LF array (C + indexI)
 		List<Integer> LF = new ArrayList<>();
@@ -83,14 +83,14 @@ public class BurrowsWheeler {
 			LF.add(C.get(i) + indexI.get(i) - 1);
 		}
 		// Final result
-		String result = "";
+		char[] result = new char[n - 1];
 		int r = 0;
-		char c = lastColumn.charAt(r);
+		char c = lastColumn[r];
 		// Reconstruct original text
-		for(int i = 0; i < n - 1; i++) {		
-			result = c + result;
+		for(int i = 0, j = n - 2; i < n - 1; i++, j--) {		
+			result[j] = c;
 			r = LF.get(r);
-			c = lastColumn.charAt(r);
+			c = lastColumn[r];
 		}
 		// Return result
 		return result;

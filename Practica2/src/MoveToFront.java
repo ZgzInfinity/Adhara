@@ -36,19 +36,19 @@ public class MoveToFront {
 	 * @param text is the content read from the input 
 	 * @return the content resulting of applying move to front algorithm to <<text>> input
 	 */
-	public static String moveToFront(String text) {
+	public static int[] moveToFront(char[] text, int n) {
 		// Check if the alphabet is empty
 		if(alphabet.isEmpty()) {
 			// Fills the alphabet
 			createAlphabet();
 		}
 		// Result of the move to front algorithm
-		String result = "";
-		int n = text.length();
+		String result2 = "";
+		int[] result = new int[n];
 		// Iterate through the characters of the input
 		for(int i = 0; i < n; i++) {
 			// Get the index of the character i
-			int idx = alphabet.indexOf(Character.toString(text.charAt(i)));
+			int idx = alphabet.indexOf(Character.toString(text[i]));
 			// Check if the character is stored in the alphabet
 			if(idx == -1) {
 				// Throws error and finish exectuion
@@ -56,7 +56,7 @@ public class MoveToFront {
 				System.exit(1);
 			}
 			// Store the numeric code of the character read
-			result += idx + " ";
+			result[i] = idx;
 			// Move the character in the first position
 			alphabet.addFirst(alphabet.remove(idx));
 		}
@@ -71,20 +71,21 @@ public class MoveToFront {
 	 * @return  the content resulting of applying move to front inverse 
 	 * 			algorithm to <<text>> input
 	 */
-	public static String moveToFrontInverse(String text) {
+	public static char[] moveToFrontInverse(String text) {
 		// Check if the alphabet is empty
 		if(alphabet.isEmpty()) {
 			// Fills the alphabet
 			createAlphabet();
 		}
-		String result = "";
 		// Elimination of the spaces and store number codes in a list
-		List<String> numberList = Arrays.asList(text.trim().split(" "));
-		// Itetation through the number list
-		for(String number : numberList) {
+		String[] numberList = text.trim().split(" ");
+		int n = numberList.length;
+		char[] result = new char[n];
+		// Iteration through the number list
+		for(int i = 0; i < n; i++) {
 			// Apply the move to front algorithm
-			result += alphabet.get(Integer.parseInt(number));
-			alphabet.addFirst(alphabet.remove(Integer.parseInt(number)));
+			result[i] = alphabet.get(Integer.parseInt(numberList[i])).charAt(0);
+			alphabet.addFirst(alphabet.remove(Integer.parseInt(numberList[i])));
 		}
 		// Returns the result
 		return result;

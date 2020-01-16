@@ -30,15 +30,13 @@ public class Main {
 					// Add termination character to file content
 					char ETX = 0x03;
 					text += ETX;
+					int n = text.length();
 					// Create the suffixes array
 					SuffixArray sa = new SuffixArray(text);
 					int[] si = sa.getSuffixIndex();
-					System.out.println("suffix");
 					// Apply Burrows Wheeler transformation and move to front algorithm to the result
-					String transformed = BurrowsWheeler.bwt(text, si);
-					System.out.println("bwt");
-					String result = MoveToFront.moveToFront(transformed);
-					System.out.println("mtf");
+					char[] transformed = BurrowsWheeler.bwt(text, si);
+					int[] result = MoveToFront.moveToFront(transformed, n);
 
 					// Write the result in a new file
 					BufferedWriter writer = null;
@@ -47,8 +45,9 @@ public class Main {
 						File file = new File(args[1] + "BW");
 						// Write the content in the file
 						writer = new BufferedWriter(new FileWriter(file));
-			            writer.write(result);
-			            System.out.println("written");
+			            for(int i = 0; i < n; i++) {
+				            writer.write(((Integer)result[i]).toString() + " ");
+			            }
 					}
 					catch (Exception e) {
 						// Throw exception if the opening of the file goes bad
@@ -77,15 +76,17 @@ public class Main {
 					// Read the content of the file which is going to be uncompressed
 					text = new String(Files.readAllBytes(Paths.get(args[1] + "BW")), StandardCharsets.UTF_8);
 					// Apply move to front inverse algorithm and Burrows Wheeler inverse transformation to the result
-					text = MoveToFront.moveToFrontInverse(text);
-					String result = BurrowsWheeler.bwtInverse(text);
+					char[] transformed = MoveToFront.moveToFrontInverse(text);
+					char[] result = BurrowsWheeler.bwtInverse(transformed, transformed.length);
 					BufferedWriter writer = null;
 					try {
 						// Open the file where the result is going to be write
 						File file = new File(args[1].substring(0, args[1].length() - 4));
 						writer = new BufferedWriter(new FileWriter(file));
 						// Write the content in the file
-						writer.write(result);
+						for(int i = 0; i < result.length; i++) {
+				            writer.write(result[i]);
+			            }
 						// Close the writing flow
 			            writer.close();
 					}
