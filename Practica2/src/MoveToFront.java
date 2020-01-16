@@ -78,7 +78,7 @@ public class MoveToFront {
 			createAlphabet();
 		}
 		// Elimination of the spaces and store number codes in a list
-		String[] numberList = text.trim().split(" ");
+		String[] numberList = text.trim().split("\\s+");
 		int n = numberList.length;
 		char[] result = new char[n];
 		// Iteration through the number list

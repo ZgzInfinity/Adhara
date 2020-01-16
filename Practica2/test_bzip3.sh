@@ -1,3 +1,4 @@
+./compile.sh
 partNameCopy="C4T"
 partNameExtension=".bz3"
 cp "$1" "$1$partNameCopy"

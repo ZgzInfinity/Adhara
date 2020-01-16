@@ -1,12 +1,5 @@
 if [ "$1" = "-c" ]
 then
-    # Creat directory for binary files if not exists
-    [ -d bin ] || mkdir bin
-    echo "Preparing bzip3 libraries"
-    # Compile c++ programm (Huffman)
-    make --directory Huffman > /dev/null
-    # Compile java programm
-    javac -d bin src/*.java
     # Execute java programm
     echo "Compressing $2 file"
     java -classpath bin Main -c $2
@@ -18,13 +11,6 @@ then
 fi
 if [ "$1" = "-u" ]
 then
-    # Creat directory for binary files if not exists
-    [ -d bin ] || mkdir bin
-    echo "Preparing bzip3 libraries"
-    # Compile c++ programm (Huffman)
-    make --directory Huffman > /dev/null
-    # Compile java programm
-    javac -d bin src/*.java
     # Execute java programm
     echo "Uncompressing $2 file"
     Huffman/huf -d $2
