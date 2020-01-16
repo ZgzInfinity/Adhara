@@ -394,7 +394,6 @@ void descifraFichero(string nombreFichero, ArbolTrie& trie,int numB){
 	ofstream f2;
 	// Apertura del fichero asociado al flujo
 	string ficheroSalida = nombreFichero + "BW";
-	cout << "El nombre del fichero descomprimido es "<< ficheroSalida << endl;
 	f2.open(ficheroSalida);
 	ifstream f(nombreFichero, ios::binary);
   	int actuales=0;

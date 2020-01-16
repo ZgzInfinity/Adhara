@@ -12,4 +12,3 @@ else
     echo "Test failed"
 fi
 rm "$1$partNameCopy"
-rm "$1$partNameExtension"

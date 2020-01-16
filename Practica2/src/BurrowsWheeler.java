@@ -53,7 +53,8 @@ public class BurrowsWheeler {
 		// Create C vector
 		int preC[] = new int[256];
 		// Create a list which contains ith occurrence of character j
-		List<Integer> indexI = new ArrayList<>();
+		// List<Integer> indexI = new ArrayList<>();
+		int[] indexI = new int[n];
 		// Initialize array to 0
 		for(int i = 0; i < 256; i++) {
 			preC[i] = 0;
@@ -62,7 +63,7 @@ public class BurrowsWheeler {
 		for (int i = 0; i < n; i++) {
 			preC[(int)lastColumn[i]] += 1;
 			// Storing the jth occurrence of the character i
-			indexI.add(preC[(int)lastColumn[i]]);
+			indexI[i] = preC[(int)lastColumn[i]];
 		}
 		int numSmallerChars = 0;
 		int aux;
@@ -72,15 +73,17 @@ public class BurrowsWheeler {
 			preC[i] = numSmallerChars;
 			numSmallerChars +=  aux;
 		}
-		List<Integer> C = new ArrayList<>();
+		// List<Integer> C = new ArrayList<>();
+		int[] C = new int[n];
 		// Create C array
 		for (int i = 0; i < n; i++) {
-			C.add(preC[(int)lastColumn[i]]);
+			C[i] = preC[(int)lastColumn[i]];
 		}
 		// Create LF array (C + indexI)
-		List<Integer> LF = new ArrayList<>();
+		// List<Integer> LF = new ArrayList<>();
+		int[] LF = new int[n];
 		for (int i = 0; i < n; i++) {
-			LF.add(C.get(i) + indexI.get(i) - 1);
+			LF[i] = C[i] + indexI[i] - 1;
 		}
 		// Final result
 		char[] result = new char[n - 1];
@@ -89,7 +92,7 @@ public class BurrowsWheeler {
 		// Reconstruct original text
 		for(int i = 0, j = n - 2; i < n - 1; i++, j--) {		
 			result[j] = c;
-			r = LF.get(r);
+			r = LF[r];
 			c = lastColumn[r];
 		}
 		// Return result
