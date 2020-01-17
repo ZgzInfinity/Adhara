@@ -1,4 +1,4 @@
-
+#!/usr/bin/env sh
 
 ./test_bzip3.sh test/makefile
 ./test_bzip3.sh test/profitChecker.sh
