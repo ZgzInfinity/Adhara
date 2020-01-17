@@ -30,7 +30,7 @@ HUFFMAN=${HUFFMAN_DIR}/Huffman
 PRUEBAS=huf
 
 # Flags de compilacion
-CPPFLAGS=-O2 -std=c++11 -Wall
+CPPFLAGS=-std=c++11 -Wall
 
 # Regla para compilar el programa principal
 all: ${PRUEBAS} 
