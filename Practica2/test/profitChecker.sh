@@ -21,7 +21,7 @@ fi
 
 # Numero de argumentos correcto
 
-# Evaluación de si el primer fichero existe o no
+# Evaluacion de si el primer fichero existe o no
 if [ ! -f $1 ]
 then
       # El fichero introducido como primer parametro no existe
@@ -31,7 +31,7 @@ then
 	  exit 2
 fi
 
-# Evaluación de si el segundo fichero existe o no
+# Evaluacion de si el segundo fichero existe o no
 if [ ! -f $2 ]
 then
       # El fichero introducido como primer parametro no existe

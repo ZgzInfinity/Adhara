@@ -1,3 +1,5 @@
+#!/usr/bin/env sh
+
 ./compile.sh
 partNameCopy="C4T"
 partNameExtension=".bz3"
