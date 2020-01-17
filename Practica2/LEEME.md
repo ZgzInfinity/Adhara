@@ -1,54 +1,52 @@
 Peñasco Estívalez, Víctor Miguel	741294@unizar.es	a741294
 Rodríguez Esteban, Rubén	737215@unizar.es	a737215
 
-# APD - Práctica 1
+# APD - Práctica 2
 
 ## Estructura del programa
 
-La práctica se ha desarrollado en el lenguaje de programación Java.
+La práctica se ha desarrollado en el lenguaje de programación Java,
+aunque el compresor Huffman se encuentra implementado en C++.
 
-El programa se estructura en cuatro ficheros:
+El programa se estructura en cuatro carpetas y varios scripts:
 
-* Product - TAD de producto.
-* Node - TAD de nodo (vértice del grafo).
-* Edge - TAD de arista.
-* Mincut - Clase principal que contiene el código de los algoritmos.
-
-## Ejecución del programa
-
-Para ejecutar el programa primero se tienen que compilar los ficheros:
-
-```
-javac Mincut/src/*.java
-```
-
-Para ejecutar el programa se necesitan los siguientes argumentos:
-
-```
-java -classpath Mincut/src Mincut <-k | -ks> <-rg1 | -rg2 | -rg3> <NUM_ATTEMPTS> <matrixFile> [<productsFile>]
-```
-
-* -k indica utilizar el algoritmo de Karger
-* -ks indica utilizar el algoritmo de Karger-Stein
-* -rg1 indica usar utilizar el generador números pseudoaleatorios Random.nextInt
-* -rg2 indica usar utilizar el generador números pseudoaleatorios Random.ints
-* -rg3 indica usar utilizar el generador números pseudoaleatorios Math.random
+* bin - Directorio que contiene los binarios Java.
+* src - Directorio que contiene el código Java (Arrays de sufijos, BWT y Move to front).
+* Huffman - Directorio que contiene el código C++ (Huffman).
+* test - Directorio que contiene los ficheros de prueba.
+* compile.sh - Script que simplifica la compilación de todos los fuentes.
+* bzip3.sh - Script que permite comprimir o descomprimir un fichero.
+* test_bzip3.sh - Script que permite automatizar la comprobación de la corrección del compresor sobre un fichero.
+* ejecutar2.sh - Script que ejecuta los casos de prueba especificados en la memoria.
 
   
-## Pruebas automáticas
+## Ejecución de pruebas automáticas
 
 Para automatizar la compilación y ejecución de los casos de prueba
-descritos en la memoria se provee el script ejecutar1.sh.
+descritos en la memoria se provee el script ejecutar2.sh.
 
 Antes de ejecutarlo es posible que haya que cambiar los permisos de
-ejecución. Para hacerlo en sistemas Unix se utiliza el siguiente comando:
+ejecución. Para hacerlo en sistemas Unix se utiliza los siguientes comandos:
 
 ```
-chmod u+x ejecutar1.sh
+chmod u+x bzip3.sh
+chmod u+x compile.sh
+chmod u+x test_bzip3.sh
+chmod u+x ejecutar2.sh
 ```
 
 Para ejecutar el script simplemente se usa este comando:
 
 ```
-./ejecutar1.sh
+./ejecutar2.sh
 ```
+
+Si se deseea ejecutar el compresor directamente se puede utilizar el siguiente comando:
+
+```
+./bzip3.sh <-c | -u> <file>
+```
+
+* -c indica utilizar el algoritmo de compresión
+* -u indica utilizar el algoritmo de descompresión
+* file indica el fichero a comprimir o descomprimir
