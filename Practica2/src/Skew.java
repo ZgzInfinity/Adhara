@@ -1,3 +1,15 @@
+/*
+ *********************************************
+ *** Adhara - Algorithm for hard problems ****
+ *** Authors: Name - Surname - NIP ***********
+ *** Victor Peñasco EStivalez - 741294 *******
+ *** Ruben Rodriguez Esteban - 737215 ********
+ *** Course: 2019 - 2020 *********************
+ *********************************************
+ */ 
+
+
+
 import java.util.Arrays;
 
 public class Skew{
@@ -5,53 +17,56 @@ public class Skew{
 	/**
      * Lexicographic order for pairs.
      */
-    private final static boolean leq(int a1, int a2, int b1, int b2)
-    {
+    private final static boolean leq(int a1, int a2, int b1, int b2){
         return (a1 < b1 || (a1 == b1 && a2 <= b2));
     }
 
     /**
      * Lexicographic order for triples.
      */
-    private final static boolean leq(int a1, int a2, int a3, int b1, int b2, int b3)
-    {
+    private final static boolean leq(int a1, int a2, int a3, int b1, int b2, int b3){
         return (a1 < b1 || (a1 == b1 && leq(a2, a3, b2, b3)));
     }
+
+
 
     /**
      * Stably sort indexes from src[0..n-1] to dst[0..n-1] with values in 0..K from v. A
      * constant offset of <code>vi</code> is added to indexes from src.
      */
-    private final static void radixPass(int [] src, int [] dst, int [] v, int vi,
-        final int n, final int K, int start, int [] cnt)
+    private final static void radixPass(int [] src, int [] dst, int [] v, int vi, 
+                                        final int n, final int K, int start, int [] cnt)
     {
         // check counter array's size.
         assert cnt.length >= K + 1;
         Arrays.fill(cnt, 0, K + 1, 0);
 
         // count occurrences
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++){
             cnt[v[start + vi + src[i]]]++;
+        }
 
         // exclusive prefix sums
-        for (int i = 0, sum = 0; i <= K; i++)
-        {
+        for (int i = 0, sum = 0; i <= K; i++){
             final int t = cnt[i];
             cnt[i] = sum;
             sum += t;
         }
 
         // sort
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++){
             dst[cnt[v[start + vi + src[i]]]++] = src[i];
+        }
     }
+
+
 
     /**
      * Find the suffix array SA of s[0..n-1] in {1..K}^n. require s[n] = s[n+1] = s[n+2] =
      * 0, n >= 2.
      */
-    static final int[] suffixArray(int [] s, int [] SA, int n, final int K, int start, int [] cnt)
-    {
+    static final int[] suffixArray(int [] s, int [] SA, int n, final int K, int start, int [] cnt){
+
         final int n0 = (n + 2) / 3, n1 = (n + 1) / 3, n2 = n / 3, n02 = n0 + n2;
 
         final int [] s12 = new int [n02 + 3];
@@ -65,8 +80,11 @@ public class Skew{
          * generate positions of mod 1 and mod 2 suffixes the "+(n0-n1)" adds a dummy mod
          * 1 suffix if n%3 == 1
          */
-        for (int i = 0, j = 0; i < n + (n0 - n1); i++)
-            if ((i % 3) != 0) s12[j++] = i;
+        for (int i = 0, j = 0; i < n + (n0 - n1); i++){
+            if ((i % 3) != 0){ 
+                s12[j++] = i;
+            }
+        }
 
         // lsb radix sort the mod 1 and mod 2 triples
         cnt = ensureSize(cnt, K + 1);
@@ -76,52 +94,52 @@ public class Skew{
 
         // find lexicographic names of triples
         int name = 0, c0 = -1, c1 = -1, c2 = -1;
-        for (int i = 0; i < n02; i++)
-        {
-            if (s[start + SA12[i]] != c0 || s[start + SA12[i] + 1] != c1
-                || s[start + SA12[i] + 2] != c2)
-            {
+
+        for (int i = 0; i < n02; i++){
+
+            if (s[start + SA12[i]] != c0 || s[start + SA12[i] + 1] != c1 || s[start + SA12[i] + 2] != c2){
                 name++;
                 c0 = s[start + SA12[i]];
                 c1 = s[start + SA12[i] + 1];
                 c2 = s[start + SA12[i] + 2];
             }
 
-            if ((SA12[i] % 3) == 1)
-            {
+            if ((SA12[i] % 3) == 1){
                 // left half
                 s12[SA12[i] / 3] = name;
             }
-            else
-            {
+            else{
                 // right half
                 s12[SA12[i] / 3 + n0] = name;
             }
         }
 
         // recurse if names are not yet unique
-        if (name < n02)
-        {
+        if (name < n02){
             cnt = suffixArray(s12, SA12, n02, name, start, cnt);
             // store unique names in s12 using the suffix array
-            for (int i = 0; i < n02; i++)
+            for (int i = 0; i < n02; i++){
                 s12[SA12[i]] = i + 1;
+            }
         }
-        else
-        {
+        else{
             // generate the suffix array of s12 directly
-            for (int i = 0; i < n02; i++)
+            for (int i = 0; i < n02; i++){
                 SA12[s12[i] - 1] = i;
+            }
         }
 
         // stably sort the mod 0 suffixes from SA12 by their first character
-        for (int i = 0, j = 0; i < n02; i++)
-            if (SA12[i] < n0) s0[j++] = 3 * SA12[i];
+        for (int i = 0, j = 0; i < n02; i++){
+            if (SA12[i] < n0){
+                 s0[j++] = 3 * SA12[i];
+            }
+        }
         radixPass(s0, SA0, s, 0, n0, K, start, cnt);
 
         // merge sorted SA0 suffixes and sorted SA12 suffixes
-        for (int p = 0, t = n0 - n1, k = 0; k < n; k++)
-        {
+        for (int p = 0, t = n0 - n1, k = 0; k < n; k++){
+
             // pos of current offset 12 suffix
             final int i = (SA12[t] < n0 ? SA12[t] * 3 + 1 : (SA12[t] - n0) * 3 + 2);
             // pos of current offset 0 suffix
@@ -134,42 +152,37 @@ public class Skew{
                 // suffix from SA12 is smaller
                 SA[k] = i;
                 t++;
-                if (t == n02)
-                {
+                if (t == n02){
                     // done --- only SA0 suffixes left
-                    for (k++; p < n0; p++, k++)
+                    for (k++; p < n0; p++, k++){
                         SA[k] = SA0[p];
+                    }
                 }
             }
-            else
-            {
+            else{
                 SA[k] = j;
                 p++;
-                if (p == n0)
-                {
+                if (p == n0){
                     // done --- only SA12 suffixes left
-                    for (k++; t < n02; t++, k++)
-                    {
+                    for (k++; t < n02; t++, k++){
                         SA[k] = (SA12[t] < n0 ? SA12[t] * 3 + 1 : (SA12[t] - n0) * 3 + 2);
                     }
                 }
             }
         }
-
         return cnt;
     }
+
+
 
     /**
      * Ensure array is large enough or reallocate (no copying).
      */
-    private static final int [] ensureSize(int [] tab, int length)
-    {
-        if (tab.length < length)
-        {
+    private static final int [] ensureSize(int [] tab, int length){
+        if (tab.length < length){
             tab = null;
             tab = new int [length];
         }
-        
         return tab;
     }
 
@@ -196,8 +209,7 @@ public class Skew{
      * @see ExtraTrailingCellsDecorator
      * @see DensePositiveDecorator
      */
-    public static int [] buildSuffixArray(int [] input, int start, int length)
-    {
+    public static int [] buildSuffixArray(int [] input, int start, int length){
         final int alphabetSize = 256;
         final int [] SA = new int [length + 3];
 
