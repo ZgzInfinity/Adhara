@@ -1,3 +1,5 @@
+./test_bzip3.sh test/timeChecker.py
+./test_bzip3.sh test/profitChecker.sh
 ./test_bzip3.sh test/big.txt
 ./test_bzip3.sh test/BuildToolPlugins.html
 ./test_bzip3.sh test/caustica.ppm
