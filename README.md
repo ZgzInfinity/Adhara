@@ -20,7 +20,7 @@ of steps to follow will explained in order to compile and execute each practice.
 
 # 2. Practice 1 - Min cut problem
 
-In the first practice the following problem has to be resolved:
+In the first practice the following problem has been resolved:
 
 ## 2.1 Explanation of the problem
 
@@ -62,7 +62,7 @@ The code of the practice is located in **Practica 1** and is composed by the fol
 
 # 3. Practice 2 - A personal version of bzip2 compressor
 
-In the second practice the following problem has to be resolved:
+In the second practice the following problem has been resolved:
 
 ## 3.1 Explanation of the problem
 
