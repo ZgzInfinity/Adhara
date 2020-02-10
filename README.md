@@ -12,7 +12,7 @@
 
 # 1. Description
 
-In this repository the two practices done during **the course of the algorithm for hard problems** have been described 
+In this repository the two practices done during **the course of algorithm for hard problems** have been described 
 carefully. Both practices have been implemented in **Java**. Apart from providing the perfectly documented code, the sequence 
 of steps to follow will explained in order to compile and execute each practice.
 
