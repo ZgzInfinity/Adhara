@@ -1,18 +1,18 @@
 <p align="center">
   <a href="https://example.com/">
-    <img src="https://i.ibb.co/K99Ys0r/Logo-APD.png" alt="Logo" width=800 height=350>
+    <img src="https://i.ibb.co/FDqDVjR/Logo-APD.png" alt="Logo" width=800 height=350>
   </a>
 
-  <h3 align="center">Algorithm for difficult problems</h3>
+  <h3 align="center">Algorithm for hard problems</h3>
 
   <p align="center">
-    <b>Practices of Algorithm for difficult problems - course 2019-20</b> <br>
+    <b>Practices of Algorithm for hard problems - course 2019-20</b> <br>
   </p>
 </p>
 
 # 1. Description
 
-In this repository the two practices done during **the course of the algorithmic for difficult problems** have been described 
+In this repository the two practices done during **the course of the algorithm for hard problems** have been described 
 carefully. Both practices have been implemented in **Java**. Apart from providing the perfectly documented code, the sequence 
 of steps to follow will explained in order to compile and execute each practice.
 
