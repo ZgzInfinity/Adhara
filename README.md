@@ -100,7 +100,7 @@ verifying if both are equal. Apart from that the time spent in each process is s
 
 &nbsp;
 
-# 4 Authors
+# 4. Authors
 
 * [Victor Peñasco](https://github.com/vpec) - 741294
 * [Rubén Rodríguez](https://github.com/ZgzInfinity) - 737215
