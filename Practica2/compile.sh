@@ -1,6 +1,4 @@
-#!/usr/bin/env sh
-
-# Creat directory for binary files if not exists
+# Create directory for binary files if not exists
 [ -d bin ] || mkdir bin
 echo "Preparing bzip3 libraries"
 # make clean --directory=Huffman > /dev/null

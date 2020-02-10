@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 if [ "$1" = "-c" ]
 then
     # Execute java programm
