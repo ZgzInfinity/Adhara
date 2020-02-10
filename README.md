@@ -26,10 +26,10 @@ In the first practice the following problem has been resolved:
 
 For tax reasons Amazon has decided to split its business in two, but wants this to be less detrimental to its sales volume, as 
 some customers may decide not to make a purchase when they have to divide it into two purchases from different suppliers. The
-participation will be done by selecting (separately) some of the articles ́ıculos for the brandamazonyotros paraamazonymas. In 
-a first approximation on we have the information on that pairs of products have ever been bought together, that is, we have a 
-table of booleans so that T(i,j) is true if the products indexed by i and j indexes have ever been bought together and in 
-another case. The aim is to make a particion of the products between Amazon and Amazonymas, so that the number of pairs of 
+partition will be done by selecting (separately) some of the articles for the brand amazon and other for amazonymas. In 
+a first approximation we have the information on which pairs of products have ever been bought together, that is, we have a 
+table of booleans so that T(i,j) is true if the products indexed by i and j indexes have ever been bought together and false in 
+any other case. The aim is to make a partition of the products between Amazon and Amazonymas, so that the number of pairs of 
 products that have been bought together once and are assigned to different suppliers is minimised.
 
 ## 2.2 Implementation
@@ -38,7 +38,7 @@ In order to resolve this problem the following steps have been done:
 
 * Design and implement a data structure that stores the data with the necessary attributes for each product. 
 * Identify the proposed problem as a graph problem, specifically the **minimun cut** or **min cut** problem which consists of
-  splitting the vertices of a graph into two disjointed sets with a number of edges m ́ınimo between the two pieces.
+  splitting the vertices of a graph into two disjointed sets with a minimum number of edges between the two pieces.
 * Implement an algorithm whose aim is make a partition close to the optimum of the products. For this purpose, 
   **the Karger probabilistic algorithm** has been programmed.
 * Test the implemented algorithm with a reasonable number of data and with different random generators.
@@ -67,7 +67,7 @@ In the second practice the following problem has been resolved:
 ## 3.1 Explanation of the problem
 
 The Burrows-Wheeler transform (BWT) converts any string into a string with a much higher frequency of adjacent equal symbols,
-and this process is reversible. one of its common uses is in the ́on text compressor, as it is used in conjunction with 
+and this process is reversible. one of its common uses is in text compression, as it is used in conjunction with 
 Move-To-Front and Huffman to obtain the popular bzip2 compressor. The most common way to calculate the BWT is by properly 
 ordering the input chain rotations. This can be done directly at a cost of O(n2logn), where the length of the chain, or much
 efficiently with cost in quasi-linear time using suffix vectors.
@@ -102,8 +102,8 @@ verifying if both are equal. Apart from that the time spent in each process is s
 
 # 4. Authors
 
-* [Victor Peñasco](https://github.com/vpec) - 741294
-* [Rubén Rodríguez](https://github.com/ZgzInfinity) - 737215
+* [Victor Peñasco](https://github.com/vpec) - 741294@unizar.es
+* [Rubén Rodríguez](https://github.com/ZgzInfinity) - 737215@unizar.es
 
 
 
